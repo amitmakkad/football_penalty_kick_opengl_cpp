@@ -277,7 +277,7 @@ void showScore() {
     currentTextColor = {24 / 255.0, 163 / 255.0, 24 / 255.0, 1.0};
     glTranslatef(-POLE_LENGTH / 2, 0, 1);
 //    glScalef(FONT_SIZE,FONT_SIZE,1.0);
-    writeText("GOALS", font, LEFT);
+    writeText("Attacker ", font, LEFT);
     glPopMatrix();
 
     glPushMatrix();
@@ -291,14 +291,15 @@ void showScore() {
     currentTextColor = {27 / 255.0, 92 / 255.0, 145 / 255.0, 1.0};
     glTranslatef(-POLE_LENGTH / 2, 0, 0);
 //    glScalef(FONT_SIZE,FONT_SIZE,1.0);
-    writeText("TRIES", font, LEFT);
+    writeText("Defender", font, LEFT);
     glPopMatrix();
 
     glPushMatrix();
     currentTextColor = {0.1, 0.1, 1.0, 1.0};
     glTranslatef(POLE_LENGTH / 2, 0, 0);
 //    glScalef(FONT_SIZE,FONT_SIZE,FONT_SIZE);
-    writeText(to_string(Tries), font, RIGHT);
+    unsigned int x=Tries-Goals;
+    writeText(to_string(x), font, RIGHT);
     glPopMatrix();
 
 

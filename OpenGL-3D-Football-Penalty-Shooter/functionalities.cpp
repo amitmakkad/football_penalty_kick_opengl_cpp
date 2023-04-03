@@ -728,12 +728,12 @@ void showMsg() {
 
     bool toWrite = true;
 
-    string msg = "MISS!";
+    string msg = "D-WINS";
 
     currentTextColor = {1.0, 0.3, 0.3, 1};
     if (determineSphere) {
         if (isItGoal(*determineSphere)) {
-            msg = "GOAL!";
+            msg = "A-WINS";
             currentTextColor = {0.3, 1.0, 0.3, 1};
         }
     }
