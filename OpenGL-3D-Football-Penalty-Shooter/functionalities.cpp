@@ -178,11 +178,14 @@ void initialiseEverything() {
 
     defender.state.velocityInitial[2]=0;//DEFENDER_SPEED_VERTICAL;
     defender.state.velocityCurrent[2]=0;//DEFENDER_SPEED_VERTICAL;
+    defender.state.velocityInitial[1]=0;//DEFENDER_SPEED_VERTICAL;
+    defender.state.velocityCurrent[1]=0;//DEFENDER_SPEED_VERTICAL;
     defender.state.positionCurrent.x = 0.0;
     defender.state.positionCurrent.y = 0.0;
     defender.state.positionCurrent.z = 0.0;
     defender.state.accelerationCurrent[2] = 0;
     defender.state.accelerationCurrent[0] = 0;
+    defender.state.accelerationCurrent[1] = 0;
     
 
     sphereCamera.xAngle = -90.0f;
@@ -480,6 +483,12 @@ void updateDefenderPosition(int _) {
             defender.state.velocityCurrent[0] = 0;
             
         }
+        // if (defender.state.positionCurrent[1] <= 0) {
+        //     defender.state.positionCurrent[1] = 0;
+        //     defender.state.velocityCurrent[1] = 0;
+        //     defender.state.accelerationCurrent[1]=0;
+        // }
+    
 
 
 

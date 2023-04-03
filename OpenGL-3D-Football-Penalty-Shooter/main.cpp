@@ -380,8 +380,8 @@ defender.state.accelerationCurrent[0] = 10;
     if(key==119){
         //up
         if(defender.state.positionCurrent[2]==0){
-                 defender.state.velocityInitial.y = DEFENDER_SPEED_VERTICAL;
-    defender.state.velocityCurrent.y = DEFENDER_SPEED_VERTICAL;
+    //              defender.state.velocityInitial.y = DEFENDER_SPEED_VERTICAL;
+    // defender.state.velocityCurrent.y = DEFENDER_SPEED_VERTICAL;
 
         defender.state.velocityInitial[2]=DEFENDER_SPEED_VERTICAL;
         defender.state.velocityCurrent[2]=DEFENDER_SPEED_VERTICAL;
@@ -389,6 +389,7 @@ defender.state.accelerationCurrent[0] = 10;
         }
        
     }
+
     
 
 }
