@@ -318,6 +318,10 @@ void incrementPowerMeter(int _) {
 
 void handleKeypress(unsigned char key, //The key that was pressed
                     int x, int y) {    //The current mouse coordinates
+
+
+    
+
     if (currentMode != HELP) {
         switch (key) {
             case '+':
@@ -337,6 +341,7 @@ void handleKeypress(unsigned char key, //The key that was pressed
             currentMode = ADJUSTING;
         }
     }
+    
     downKeys[key] = true;
     if (currentMode == ADJUSTING) {
         switch (key) {
@@ -357,6 +362,33 @@ void handleKeypress(unsigned char key, //The key that was pressed
                 currentMode = ADJUSTING;
         }
     }
+    if(key==97){
+        //left
+    
+        defender.state.velocityInitial.x = -DEFENDER_SPEED;
+    defender.state.velocityCurrent.x = -DEFENDER_SPEED;
+
+defender.state.accelerationCurrent[0] = 10;
+    }
+    if(key==100){
+        //right
+          defender.state.velocityInitial.x = DEFENDER_SPEED;
+    defender.state.velocityCurrent.x = DEFENDER_SPEED;
+    defender.state.accelerationCurrent[0] = -10;
+    }
+    if(key==119){
+        //up
+        if(defender.state.positionCurrent[2]==0){
+                 defender.state.velocityInitial.y = DEFENDER_SPEED_VERTICAL;
+    defender.state.velocityCurrent.y = DEFENDER_SPEED_VERTICAL;
+
+        defender.state.velocityInitial[2]=DEFENDER_SPEED_VERTICAL;
+        defender.state.velocityCurrent[2]=DEFENDER_SPEED_VERTICAL;
+        defender.state.accelerationCurrent[2] = -9.8;
+        }
+       
+    }
+    
 
 }
 
@@ -403,6 +435,12 @@ void idle() {
         if (currentMode == POWERING) {
         }
     }
+
+    
+
+
+
+
     glutPostRedisplay();
 }
 
@@ -537,6 +575,13 @@ int main(int argc, char *argv[]) {
     initialiseEverything();
     currentMode = HELP;
 
+
+
+
+
+
+    
+
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA | GLUT_MULTISAMPLE);
     glutInitWindowSize(WIDTH, HEIGHT);
@@ -547,7 +592,7 @@ int main(int argc, char *argv[]) {
     glutKeyboardFunc(handleKeypress);
     glutKeyboardUpFunc(handleUpKeypress);
     glutSpecialFunc(handleSpecialKeypress);
-    // glutPassiveMotionFunc(handlePassiveMouse);
+    glutPassiveMotionFunc(handlePassiveMouse);
 //    groundTexture = LoadBMP("resources/grass.bmp");
     groundTexture = convertAndLoadTexture("resources/grass1.txt");
     defenderTexture = convertAndLoadTexture("resources/defender1.txt");
@@ -555,11 +600,15 @@ int main(int argc, char *argv[]) {
     ads = convertAndLoadTexture("resources/ads.txt");
     leftArm = convertAndLoadTexture("resources/left_arm.txt");
     rightArm = convertAndLoadTexture("resources/right_arm.txt");
-    // glutMouseFunc(NULL);
-    glutMotionFunc(move_mouse);
+    glutMouseFunc(NULL);
+    // glutMotionFunc(move_mouse);
     glutDisplayFunc(draw);
     myInit();
     glutMainLoop();
 
+
     return 0;
 }
+
+
+

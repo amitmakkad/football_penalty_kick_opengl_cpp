@@ -170,14 +170,19 @@ void initialiseEverything() {
     defender.width = DEFENDER_WIDTH;
     defender.height = 2.3;
 
-    defender.state.velocityInitial.x = defender.state.velocityCurrent.x = DEFENDER_SPEED;
-    defender.state.velocityInitial.y = defender.state.velocityCurrent.y = DEFENDER_SPEED_VERTICAL;
-    defender.state.velocityInitial[2]=DEFENDER_SPEED_VERTICAL;
-    defender.state.velocityCurrent[2]=DEFENDER_SPEED_VERTICAL;
+    defender.state.velocityInitial.x = 0;//DEFENDER_SPEED;
+    defender.state.velocityCurrent.x = 0;//DEFENDER_SPEED;
+    defender.state.velocityInitial.y = 0;//DEFENDER_SPEED_VERTICAL;
+    defender.state.velocityCurrent.y = 0;//DEFENDER_SPEED_VERTICAL;
+    
+
+    defender.state.velocityInitial[2]=0;//DEFENDER_SPEED_VERTICAL;
+    defender.state.velocityCurrent[2]=0;//DEFENDER_SPEED_VERTICAL;
     defender.state.positionCurrent.x = 0.0;
     defender.state.positionCurrent.y = 0.0;
     defender.state.positionCurrent.z = 0.0;
-    defender.state.accelerationCurrent[2] = -9.8;
+    defender.state.accelerationCurrent[2] = 0;
+    defender.state.accelerationCurrent[0] = 0;
     
 
     sphereCamera.xAngle = -90.0f;
@@ -438,19 +443,20 @@ void updateDefenderPosition(int _) {
     defender.acceleration();
 
     if (currentMode == SHOOTING) {
-        if (!done) {
-//            cout<<sphere.velocityCurrent.x<<endl;
-            if (sphere.velocityCurrent.x < 0) {
-                defender.state.velocityCurrent.x = -DEFENDER_SPEED;
-                done = 1;
-            } else if (sphere.velocityCurrent.x > 0) {
-                defender.state.velocityCurrent.x = DEFENDER_SPEED;
-                done = 1;
-            } else {
-                defender.state.velocityCurrent.x = 0;
-                done = 1;
-            }
-        }
+//         if (!done) {
+// //            cout<<sphere.velocityCurrent.x<<endl;
+//             if (sphere.velocityCurrent.x < 0) {
+//                 defender.state.velocityCurrent.x = -DEFENDER_SPEED;
+//                 done = 1;
+//             } else if (sphere.velocityCurrent.x > 0) {
+//                 defender.state.velocityCurrent.x = DEFENDER_SPEED;
+//                 done = 1;
+//             } else {
+//                 defender.state.velocityCurrent.x = 0;
+//                 done = 1;
+//             }
+//         }
+        
         for (int i = 0; i < 3; ++i) {
             defender.state.positionCurrent[i] =
                     defender.state.velocityCurrent[i] * t + 0.5 * defender.state.accelerationCurrent[i] * t * t +
@@ -458,11 +464,27 @@ void updateDefenderPosition(int _) {
             defender.state.velocityCurrent[i] =
                     defender.state.velocityCurrent[i] + defender.state.accelerationCurrent[i] * t;
         }
+
         if (defender.state.positionCurrent[2] <= 0) {
             defender.state.positionCurrent[2] = 0;
-            defender.state.velocityCurrent[2] = -defender.state.velocityCurrent[2];
+            defender.state.velocityCurrent[2] = 0;
+            defender.state.accelerationCurrent[2]=0;
+        }
+        if (defender.state.velocityCurrent[0] < 0&&defender.state.accelerationCurrent[0]<0) {
+            defender.state.accelerationCurrent[0] = 0;
+            defender.state.velocityCurrent[0] = 0;
             
         }
+        if (defender.state.velocityCurrent[0] > 0&&defender.state.accelerationCurrent[0]>0) {
+            defender.state.accelerationCurrent[0] = 0;
+            defender.state.velocityCurrent[0] = 0;
+            
+        }
+
+
+
+
+
 //    if (currentMode != NONE && currentMode != GOAL_ANIMATION){
 //    }
     }
@@ -679,11 +701,11 @@ float writeText(string text, int texture, alignment align) {
 int textRotX;
 
 void rotateMsg(int _) {
-    textRotX = (textRotX + 3) % 360;
+    // textRotX = (textRotX + 3) % 360;
 
-    if (textRotX != 0) {
-        glutTimerFunc(1, rotateMsg, 0);
-    }
+    // if (textRotX != 0) {
+    //     glutTimerFunc(1, rotateMsg, 0);
+    // }
 }
 
 
@@ -725,10 +747,11 @@ void showMsg() {
         glColor4fv(col);
         glScalef(2, 0.5, 1);
         glRotatef(90, 1, 0, 0);
+        // gluSphere(sphere, radius, slices, stacks);
         gluCylinder(quad, 1, 1, 1, 40, 40);
-        gluDisk(quad, 0.9, 1, 40, 40);
+        // gluDisk(quad, 0.9, 1, 40, 40);
         glColor4fv(colin);
-        gluDisk(quad, 0, 0.9, 40, 40);
+        // gluDisk(quad, 0, 0.9, 40, 40);
 
         glPopMatrix();
 
