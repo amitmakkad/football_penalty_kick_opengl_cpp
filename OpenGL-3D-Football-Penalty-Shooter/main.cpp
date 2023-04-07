@@ -416,23 +416,23 @@ void handleKeypress(unsigned char key, // The key that was pressed
         switch (key)
         {
         case ' ':
-            currentMode = POWERING;
-            glutTimerFunc(1000 * 1 / 60.0, incrementPowerMeter, 0);
+            currentMode = POWERING_ACC;
+            glutTimerFunc(1000 * 1 / 60.0, incrementPowerMeter2, 0);
             break;
         case 27: // Escape key
             currentMode = ADJUSTING;
         }
     }
-    if (currentMode == POWERING)
+    if (currentMode == POWERING_ACC)
     {
         switch (key)
         {
         case ' ':
-            currentMode = POWERING_ACC;
-            glutTimerFunc(1000 * 1 / 60.0, incrementPowerMeter2, 0);
+            currentMode = POWERING;
+            glutTimerFunc(1000 * 1 / 60.0, incrementPowerMeter, 0);
             break;
         case 27: // Escape key
-            currentMode = POWERING;
+            currentMode = AIMING;
         }
     }
     if (key == 97)
@@ -470,13 +470,14 @@ void idle()
 {
     if (!currentlyWaiting)
     {
+        // if (currentMode == POWERING_ACC && !downKeys[' '])
+        // {
+        //     cout << "was here\n";
+        //     sphere.accelerationCurrent.x = -9.8;
+        // }
         if (currentMode == POWERING && !downKeys[' '])
         {
-            currentMode = POWERING_ACC;
-            powerMeter2 = 0.0;
-        }
-        if (currentMode == POWERING_ACC && !downKeys[' '])
-        {
+            cout << "was here in the powering mode.\n";
             sphere.velocityCurrent[0] = sphere.velocityInitial[0] =
                 cos(DEG2GRAD(aimArrow.zAngle)) * sin(DEG2GRAD(aimArrow.yAngle)) * BALL_MAX_SPEED * powerMeter;
             sphere.velocityCurrent[1] = sphere.velocityInitial[1] =
@@ -488,10 +489,10 @@ void idle()
             glutTimerFunc(10, updatePosCallBack, 0);
             currentlyWaiting = true;
         }
-        if (currentMode == POWERING && downKeys[27])
+        if (currentMode == POWERING_ACC && downKeys[27])
         {
             currentMode = AIMING;
-            powerMeter = 0.0;
+            powerMeter2 = 0.0;
         }
         if (currentMode == SHOOTING)
         {
