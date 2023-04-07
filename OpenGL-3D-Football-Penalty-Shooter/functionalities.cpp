@@ -541,10 +541,13 @@ void updateDefenderPosition(int _) {
 
         if(currentLevel==HUMAN){
             
-            if (defender.state.positionCurrent[2] <= 0) {
+            if (defender.state.positionCurrent[2] < 0) {
                 defender.state.positionCurrent[2] = 0;
                 defender.state.velocityCurrent[2] = 0;
                 defender.state.accelerationCurrent[2]=0;
+            }
+            else{
+                defender.state.accelerationCurrent[2]=-9.8;
             }
             if (defender.state.velocityCurrent[0] < 0&&defender.state.accelerationCurrent[0]<0) {
                 defender.state.accelerationCurrent[0] = 0;
@@ -560,27 +563,40 @@ void updateDefenderPosition(int _) {
       
         }
         if(currentLevel==EASY){
-        //     defender.state.velocityInitial[0] = defender.state.velocityCurrent[0] = DEFENDER_SPEED;
-        // defender.state.velocityInitial[2]=defender.state.velocityCurrent[2]=DEFENDER_SPEED_VERTICAL;
-        // defender.state.velocityInitial.x = defender.state.velocityCurrent.x = DEFENDER_SPEED;
-        // defender.state.velocityInitial.z=defender.state.velocityCurrent.z=DEFENDER_SPEED_VERTICAL;
-
+        
         defender.state.accelerationCurrent[0] = 0;
         defender.state.accelerationCurrent[1] = 0;
         defender.state.accelerationCurrent[2] = -9.8;
 
-        // defender.state.positionCurrent[0] = 0;
-        // defender.state.positionCurrent[1] = 0;
-        // defender.state.positionCurrent[2] = 0;
-            // defender.state.velocityInitial[0]= defender.state.velocityCurrent[0] = DEFENDER_SPEED;
-            // defender.state.velocityInitial[2] = defender.state.velocityCurrent[2] = DEFENDER_SPEED_VERTICAL;
-            // defender.state.velocityInitial[2]=DEFENDER_SPEED_VERTICAL;
-            // defender.state.velocityCurrent[2]=DEFENDER_SPEED_VERTICAL;
-            //cout<<"nss easy"<<endl;
-           
-            // defender.state.accelerationCurrent[0] = 0;
-            // defender.state.accelerationCurrent[1] = 0;
-            // defender.state.accelerationCurrent[2] = -9.8;
+        
+
+            if (defender.state.positionCurrent[2] <0) {
+                defender.state.positionCurrent[2] = 0;
+                defender.state.velocityCurrent[2] = -defender.state.velocityCurrent[2];
+            }
+             cout<<defender.state.positionCurrent[0]<<" easy "<<defender.state.positionCurrent[2]<<" "<<defender.state.accelerationCurrent[2]<<" "<<defender.state.velocityCurrent[2]<<" "<<defender.state.velocityCurrent[0]<<endl;
+        }
+        if(currentLevel==MEDIUM){
+        
+        defender.state.accelerationCurrent[0] = 0;
+        defender.state.accelerationCurrent[1] = 0;
+        defender.state.accelerationCurrent[2] = -9.8;
+
+        
+
+            if (defender.state.positionCurrent[2] <0) {
+                defender.state.positionCurrent[2] = 0;
+                defender.state.velocityCurrent[2] = -defender.state.velocityCurrent[2];
+            }
+             cout<<defender.state.positionCurrent[0]<<" easy "<<defender.state.positionCurrent[2]<<" "<<defender.state.accelerationCurrent[2]<<" "<<defender.state.velocityCurrent[2]<<" "<<defender.state.velocityCurrent[0]<<endl;
+        }
+       if(currentLevel==HARD){
+        
+        defender.state.accelerationCurrent[0] = 0;
+        defender.state.accelerationCurrent[1] = 0;
+        defender.state.accelerationCurrent[2] = -9.8;
+
+        
 
             if (defender.state.positionCurrent[2] <0) {
                 defender.state.positionCurrent[2] = 0;
@@ -593,19 +609,11 @@ void updateDefenderPosition(int _) {
             defender.state.positionCurrent[i] +=
                     defender.state.velocityCurrent[i] * t + 0.5 * defender.state.accelerationCurrent[i] * t * t ;
                     
-            defender.state.velocityCurrent[i] +=
+            defender.state.velocityCurrent[i] =
                     defender.state.velocityCurrent[i] + defender.state.accelerationCurrent[i] * t;
         }
-        
-    
-
-
-
-
-
-//    if (currentMode != NONE && currentMode != GOAL_ANIMATION){
-//    }
     }
+    
     else{
         done=0;
     };

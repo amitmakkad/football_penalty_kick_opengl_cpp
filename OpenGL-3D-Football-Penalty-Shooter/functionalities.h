@@ -73,7 +73,7 @@ void drawHUD();
 void draw_options();
 
 enum mode {
-    ADJUSTING, AIMING, POWERING, SHOOTING, HELP, NONE , CHOOSE
+    ADJUSTING, AIMING, POWERING, SHOOTING, HELP, NONE , CHOOSE, RESULT
 };
 enum level {
     HUMAN, EASY, MEDIUM, HARD, NIL
