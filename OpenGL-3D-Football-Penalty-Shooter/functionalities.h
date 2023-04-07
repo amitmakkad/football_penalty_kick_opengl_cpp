@@ -85,6 +85,7 @@ enum mode
 void backgroundMusicPlayer(int);
 
 extern double powerMeter;
+extern double powerMeter2;
 
 void drawPowerMeter();
 

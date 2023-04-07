@@ -267,10 +267,10 @@ void draw()
     // initialiseEverything();
     // currentMode = HELP;
     // return;
-    if (Goals >= 2)
-    {
-        currentMode = HELP;
-    }
+    // if (Goals >= 2)
+    // {
+    //     currentMode = HELP;
+    // }
     drawHUD();
 
     glutSwapBuffers();
@@ -356,6 +356,19 @@ void incrementPowerMeter(int _)
         glutTimerFunc(1000 * 1 / 60.0, incrementPowerMeter, 0);
     }
 }
+void incrementPowerMeter2(int _)
+{
+    static int up = 1;
+    if (powerMeter2 > 1.0 || powerMeter2 < 0.0)
+    {
+        up *= -1;
+    }
+    if (!currentlyWaiting && currentMode == POWERING_ACC)
+    {
+        powerMeter2 += up * 0.015;
+        glutTimerFunc(1000 * 1 / 60.0, incrementPowerMeter2, 0);
+    }
+}
 
 void handleKeypress(unsigned char key, // The key that was pressed
                     int x, int y)
@@ -410,6 +423,18 @@ void handleKeypress(unsigned char key, // The key that was pressed
             currentMode = ADJUSTING;
         }
     }
+    if (currentMode == POWERING)
+    {
+        switch (key)
+        {
+        case ' ':
+            currentMode = POWERING_ACC;
+            glutTimerFunc(1000 * 1 / 60.0, incrementPowerMeter2, 0);
+            break;
+        case 27: // Escape key
+            currentMode = POWERING;
+        }
+    }
     if (key == 97)
     {
         // left
@@ -446,6 +471,11 @@ void idle()
     if (!currentlyWaiting)
     {
         if (currentMode == POWERING && !downKeys[' '])
+        {
+            currentMode = POWERING_ACC;
+            powerMeter2 = 0.0;
+        }
+        if (currentMode == POWERING_ACC && !downKeys[' '])
         {
             sphere.velocityCurrent[0] = sphere.velocityInitial[0] =
                 cos(DEG2GRAD(aimArrow.zAngle)) * sin(DEG2GRAD(aimArrow.yAngle)) * BALL_MAX_SPEED * powerMeter;

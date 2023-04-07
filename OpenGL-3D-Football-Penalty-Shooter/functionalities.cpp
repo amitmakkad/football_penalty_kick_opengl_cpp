@@ -292,6 +292,7 @@ void myShear()
 }
 
 double powerMeter = 0.0;
+double powerMeter2 = 0.0;
 
 void drawPowerMeter()
 {
@@ -299,7 +300,7 @@ void drawPowerMeter()
     glPushMatrix();
     glPushAttrib(GL_CURRENT_BIT);
 
-    glTranslatef(-10.0, -20.0 + powerMeter * 40, 0.0);
+    glTranslatef(-30.0, -20.0 + powerMeter * 40, 0.0);
 
     glColor4f(0.1, 0.1, 0.1, 1.0);
     glBegin(GL_QUADS);
@@ -339,6 +340,32 @@ void drawPowerMeter()
     //    glVertex2f(10.0, 0);
     //    glEnd();
 
+    glPopAttrib();
+    glPopMatrix();
+}
+
+void drawPowerMeter2()
+{
+
+    glPushMatrix();
+    glPushAttrib(GL_CURRENT_BIT);
+
+    glTranslatef(-60.0, -20.0 + powerMeter2 * 40, 0.0);
+
+    glColor4f(0.1, 0.1, 0.1, 1.0);
+    glBegin(GL_QUADS);
+    glVertex2f(-10.0, -0.2);
+    glVertex2f(5.0, -0.2);
+    glVertex2f(5.0, 0.2);
+    glVertex2f(-10.0, 0.2);
+    glEnd();
+    glBegin(GL_TRIANGLES);
+
+    glVertex2f(5.0, -0.4);
+    glVertex2f(8.0, 0.0);
+    glVertex2f(5.0, 0.4);
+
+    glEnd();
     glPopAttrib();
     glPopMatrix();
 }
@@ -414,6 +441,22 @@ Press Q at any time to exit the game.
             glScalef(0.3, 4.0, 1.0);
 
             drawPowerMeter();
+
+            rainBox();
+            glScalef(1.0, -1.0, 0.0);
+            rainBox();
+
+            glPopMatrix();
+        }
+        if (currentMode == POWERING_ACC)
+        { // Power Bar
+            glPushMatrix();
+
+            glTranslatef(-60, 0, 0);
+
+            glScalef(0.3, 4.0, 1.0);
+
+            drawPowerMeter2();
 
             rainBox();
             glScalef(1.0, -1.0, 0.0);
