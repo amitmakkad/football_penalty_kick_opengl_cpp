@@ -234,7 +234,7 @@ void draw() {
 
 //    loadTextureFile("");
     drawHUD();
-
+   
 
     glutSwapBuffers();
     glutPostRedisplay();
@@ -320,7 +320,24 @@ void incrementPowerMeter(int _) {
 void handleKeypress(unsigned char key, //The key that was pressed
                     int x, int y) {    //The current mouse coordinates
 
-
+    if(currentMode==CHOOSE){
+        if(key=='1'){
+            currentLevel=HUMAN;
+            cout<<"human"<<endl;
+        }
+        else if(key=='2'){
+            currentLevel=EASY;
+            cout<<"easy"<<endl;
+        }
+        else if(key=='3'){
+            currentLevel=MEDIUM;
+        }
+        else if(key=='4'){
+            currentLevel=HARD;
+        }
+        currentMode=ADJUSTING;
+        
+    }
     
 
     if (currentMode != HELP) {
@@ -337,10 +354,12 @@ void handleKeypress(unsigned char key, //The key that was pressed
 //            cout<<sphereCamera.distance<<endl;
                 break;
         }
-    } else {
-        if (key == 27) {
-            currentMode = ADJUSTING;
-        }
+    } 
+    else {
+        if (key == 27){
+            currentMode = CHOOSE;
+        } 
+        
     }
     
     downKeys[key] = true;
@@ -363,32 +382,31 @@ void handleKeypress(unsigned char key, //The key that was pressed
                 currentMode = ADJUSTING;
         }
     }
-    if(key==97){
-        //left
-    
-        defender.state.velocityInitial.x = -DEFENDER_SPEED;
-    defender.state.velocityCurrent.x = -DEFENDER_SPEED;
-
-defender.state.accelerationCurrent[0] = 10;
-    }
-    if(key==100){
-        //right
-          defender.state.velocityInitial.x = DEFENDER_SPEED;
-    defender.state.velocityCurrent.x = DEFENDER_SPEED;
-    defender.state.accelerationCurrent[0] = -10;
-    }
-    if(key==119){
-        //up
-        if(defender.state.positionCurrent[2]==0){
-    //              defender.state.velocityInitial.y = DEFENDER_SPEED_VERTICAL;
-    // defender.state.velocityCurrent.y = DEFENDER_SPEED_VERTICAL;
-
-        defender.state.velocityInitial[2]=DEFENDER_SPEED_VERTICAL;
-        defender.state.velocityCurrent[2]=DEFENDER_SPEED_VERTICAL;
-        defender.state.accelerationCurrent[2] = -9.8;
+    if(currentLevel==HUMAN){
+        if(key==97){
+            //left
+        
+            defender.state.velocityInitial.x = -DEFENDER_SPEED;
+            defender.state.velocityCurrent.x = -DEFENDER_SPEED;
+            defender.state.accelerationCurrent[0] = 10;
         }
-       
+        if(key==100){
+            //right
+            defender.state.velocityInitial.x = DEFENDER_SPEED;
+            defender.state.velocityCurrent.x = DEFENDER_SPEED;
+            defender.state.accelerationCurrent[0] = -10;
+        }
+        if(key==119){
+            //up
+            if(defender.state.positionCurrent[2]==0){
+                defender.state.velocityInitial[2]=DEFENDER_SPEED_VERTICAL;
+                defender.state.velocityCurrent[2]=DEFENDER_SPEED_VERTICAL;
+                defender.state.accelerationCurrent[2] = -9.8;
+            }
+        
+        }
     }
+    
 
     
 
@@ -576,13 +594,8 @@ int main(int argc, char *argv[]) {
 //    convertToTexture("resources/texture.txt", "resources/texture.texture");
     initialiseEverything();
     currentMode = HELP;
+    currentLevel=NIL;
 
-
-
-
-
-
-    
 
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA | GLUT_MULTISAMPLE);

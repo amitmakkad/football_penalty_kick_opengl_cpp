@@ -70,10 +70,13 @@ extern camera sphereCamera;
 void myShear();
 
 void drawHUD();
-
+void draw_options();
 
 enum mode {
-    ADJUSTING, AIMING, POWERING, SHOOTING, HELP, NONE
+    ADJUSTING, AIMING, POWERING, SHOOTING, HELP, NONE , CHOOSE
+};
+enum level {
+    HUMAN, EASY, MEDIUM, HARD, NIL
 };
 
 void backgroundMusicPlayer(int);
@@ -92,6 +95,7 @@ void end2DTexture(bool lightingDisabled = true);
 
 
 extern mode currentMode;
+extern level currentLevel;
 
 extern bool currentlyWaiting;
 extern bool stopEverything;

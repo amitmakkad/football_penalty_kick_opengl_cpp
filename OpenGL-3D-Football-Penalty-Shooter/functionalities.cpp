@@ -8,7 +8,7 @@
 
 using namespace std;
 
-
+level currentLevel=NIL;
 mode currentMode = ADJUSTING;
 bool currentlyWaiting;
 bool downKeys[127];
@@ -169,23 +169,56 @@ void initialiseEverything() {
 
     defender.width = DEFENDER_WIDTH;
     defender.height = 2.3;
+    
 
-    defender.state.velocityInitial.x = 0;//DEFENDER_SPEED;
+    
+    
+
+    
+    
+    if(currentLevel==EASY){
+        
+        defender.state.velocityInitial[0] = defender.state.velocityCurrent[0] = DEFENDER_SPEED;
+        //defender.state.velocityInitial.y = defender.state.velocityCurrent.y = DEFENDER_SPEED_VERTICAL;
+        defender.state.velocityInitial[2]=DEFENDER_SPEED_VERTICAL;
+        defender.state.velocityCurrent[2]=DEFENDER_SPEED_VERTICAL;
+        defender.state.accelerationCurrent[0] = 0;
+        defender.state.accelerationCurrent[1] = 0;
+        defender.state.accelerationCurrent[2] = -9.8;
+        defender.state.positionCurrent[0] = 0;
+        defender.state.positionCurrent[1] = 0;
+        defender.state.positionCurrent[2] = 0;
+        defender.state.velocityInitial.x = DEFENDER_SPEED;
+    defender.state.velocityCurrent.x = DEFENDER_SPEED;
+    defender.state.velocityInitial.y = DEFENDER_SPEED_VERTICAL;
+    defender.state.velocityCurrent.y = DEFENDER_SPEED_VERTICAL;
+
+    }
+    if(currentLevel==HUMAN){
+        defender.state.velocityInitial[2]=0;//DEFENDER_SPEED_VERTICAL;
+        defender.state.velocityCurrent[2]=0;//DEFENDER_SPEED_VERTICAL;
+        defender.state.velocityInitial[0]=0;//DEFENDER_SPEED_VERTICAL;
+        defender.state.velocityCurrent[0]=0;//DEFENDER_SPEED_VERTICAL;
+        defender.state.accelerationCurrent[2] = 0;
+        defender.state.accelerationCurrent[0] = 0;
+        defender.state.accelerationCurrent[1] = 0;
+        defender.state.positionCurrent[0] = 0;
+        defender.state.positionCurrent[1] = 0;
+        defender.state.positionCurrent[2] = 0;
+        defender.state.velocityInitial.x = 0;//DEFENDER_SPEED;
     defender.state.velocityCurrent.x = 0;//DEFENDER_SPEED;
     defender.state.velocityInitial.y = 0;//DEFENDER_SPEED_VERTICAL;
     defender.state.velocityCurrent.y = 0;//DEFENDER_SPEED_VERTICAL;
-    
-
-    defender.state.velocityInitial[2]=0;//DEFENDER_SPEED_VERTICAL;
-    defender.state.velocityCurrent[2]=0;//DEFENDER_SPEED_VERTICAL;
-    defender.state.velocityInitial[1]=0;//DEFENDER_SPEED_VERTICAL;
-    defender.state.velocityCurrent[1]=0;//DEFENDER_SPEED_VERTICAL;
-    defender.state.positionCurrent.x = 0.0;
-    defender.state.positionCurrent.y = 0.0;
-    defender.state.positionCurrent.z = 0.0;
-    defender.state.accelerationCurrent[2] = 0;
-    defender.state.accelerationCurrent[0] = 0;
-    defender.state.accelerationCurrent[1] = 0;
+    }
+    // defender.state.velocityInitial[0]= defender.state.velocityCurrent[0] = DEFENDER_SPEED;
+    //         defender.state.velocityInitial[2] = defender.state.velocityCurrent[2] = DEFENDER_SPEED_VERTICAL;
+    //         defender.state.velocityInitial[2]=DEFENDER_SPEED_VERTICAL;
+    //         defender.state.velocityCurrent[2]=DEFENDER_SPEED_VERTICAL;
+    //         cout<<"nss easy"<<endl;
+           
+    //         defender.state.accelerationCurrent[0] = 0;
+    //         defender.state.accelerationCurrent[1] = 0;
+    //         defender.state.accelerationCurrent[2] = -9.8;
     
 
     sphereCamera.xAngle = -90.0f;
@@ -196,7 +229,7 @@ void initialiseEverything() {
         sphere.positionCurrent[i] = sphere.velocityCurrent[i] = 0;
     }
     powerMeter = 0.0;
-    currentMode = ADJUSTING;
+    currentMode = CHOOSE;
 
     sphere.positionInitial.x = sphere.positionCurrent.x = 0.0;
     sphere.velocityCurrent[0] = sphere.velocityInitial[0] = 0;
@@ -348,25 +381,25 @@ void drawHUD() {
     if (currentMode == HELP) {
 
         const char *instructions = R"INSTRUCT(
-INSTRUCTIONS
-You can use the mouse to look around.
-Use the +/- keys for zooming in/out.
+        INSTRUCTIONS
+        You can use the mouse to look around.
+        Use the +/- keys for zooming in/out.
 
-AIMING
-Press the Enter/Return key to enter Aiming Mode.
-Direct the arrow with the arrow keys to set up the
-direction of the shot.
+        AIMING
+        Press the Enter/Return key to enter Aiming Mode.
+        Direct the arrow with the arrow keys to set up the
+        direction of the shot.
 
-POWERING
-Press and hold Space after aiming to power up.
-Release Space to select the specified power level.
-Press the ESC key (when holding down SPACE) to cancel
-POWERING mode.
+        POWERING
+        Press and hold Space after aiming to power up.
+        Release Space to select the specified power level.
+        Press the ESC key (when holding down SPACE) to cancel
+        POWERING mode.
 
-Press ESC key to return to the previous mode or to exit the
-instructions.
-Press Q at any time to exit the game.
-)INSTRUCT";
+        Press ESC key to return to the previous mode or to exit the
+        instructions.
+        Press Q at any time to exit the game.
+        )INSTRUCT";
 
         glPushMatrix();
         glRotatef(90 + sphereCamera.xAngle, 0, 0, 1);
@@ -387,8 +420,40 @@ Press Q at any time to exit the game.
         currentTextColor = {1.0, 1.0, 1.0, 1.0};
         writeMultiLineText(instructions, font, CENTER);
         glPopMatrix();
-    } else {   //HUD Render
+    } 
+    else {   //HUD Render
+        if(currentMode==CHOOSE){
+        const char *instruction = R"INSTRUCT(
+        Choose:-
+        PLAY WITH HUMAN:-
+        HUMAN - 1
+        PLAY WITH COMPUTER:-
+        EASY - 2   
+        MEDIUM - 3
+        HARD - 4
 
+        )INSTRUCT";
+
+        glPushMatrix();
+        glRotatef(90 + sphereCamera.xAngle, 0, 0, 1);
+        glRotatef(-sphereCamera.zAngle, 1, 0, 0);
+
+        glTranslatef(0, -BALL_RADIUS, -BALL_RADIUS);
+
+        glColor4f(0, 0, 0, 0.8);
+        glBegin(GL_QUADS);
+        glVertex3f(-10, 0, -5);
+        glVertex3f(10, 0, -5);
+        glVertex3f(10, 0, 6);
+        glVertex3f(-10, 0, 6);
+        glEnd();
+        glScalef(0.5, 0.5, 0.5);
+        glTranslatef(0, -0.001, 9.5);
+
+        currentTextColor = {1.0, 1.0, 1.0, 1.0};
+        writeMultiLineText(instruction, font, CENTER);
+        glPopMatrix();
+    }else{
         glDisable(GL_LIGHTING);
         glMatrixMode(GL_PROJECTION);
         glPushAttrib(GL_CURRENT_BIT);
@@ -419,6 +484,7 @@ Press Q at any time to exit the game.
 
             glPopMatrix();
         }
+    }
 
 // Making sure we can render 3d again
 
@@ -429,8 +495,16 @@ Press Q at any time to exit the game.
         glMatrixMode(GL_MODELVIEW);
 
     }
+
+    
+
+
     glEnable(GL_LIGHTING);
 }
+
+
+
+
 void updateDefenderPosition(int _) {
 
     static float increment = 2.0f;
@@ -459,35 +533,53 @@ void updateDefenderPosition(int _) {
 //                 done = 1;
 //             }
 //         }
+
         
         for (int i = 0; i < 3; ++i) {
-            defender.state.positionCurrent[i] =
-                    defender.state.velocityCurrent[i] * t + 0.5 * defender.state.accelerationCurrent[i] * t * t +
-                    defender.state.positionCurrent[i];
-            defender.state.velocityCurrent[i] =
+            defender.state.positionCurrent[i] +=
+                    defender.state.velocityCurrent[i] * t + 0.5 * defender.state.accelerationCurrent[i] * t * t ;
+                    
+            defender.state.velocityCurrent[i] +=
                     defender.state.velocityCurrent[i] + defender.state.accelerationCurrent[i] * t;
         }
 
-        if (defender.state.positionCurrent[2] <= 0) {
-            defender.state.positionCurrent[2] = 0;
-            defender.state.velocityCurrent[2] = 0;
-            defender.state.accelerationCurrent[2]=0;
+        if(currentLevel==HUMAN){
+            if (defender.state.positionCurrent[2] <= 0) {
+                defender.state.positionCurrent[2] = 0;
+                defender.state.velocityCurrent[2] = 0;
+                defender.state.accelerationCurrent[2]=0;
+            }
+            if (defender.state.velocityCurrent[0] < 0&&defender.state.accelerationCurrent[0]<0) {
+                defender.state.accelerationCurrent[0] = 0;
+                defender.state.velocityCurrent[0] = 0;
+                
+            }
+            if (defender.state.velocityCurrent[0] > 0&&defender.state.accelerationCurrent[0]>0) {
+                defender.state.accelerationCurrent[0] = 0;
+                defender.state.velocityCurrent[0] = 0;
+                
+            }
         }
-        if (defender.state.velocityCurrent[0] < 0&&defender.state.accelerationCurrent[0]<0) {
-            defender.state.accelerationCurrent[0] = 0;
-            defender.state.velocityCurrent[0] = 0;
-            
+        if(currentLevel==EASY){
+            // defender.state.velocityInitial[0]= defender.state.velocityCurrent[0] = DEFENDER_SPEED;
+            // defender.state.velocityInitial[2] = defender.state.velocityCurrent[2] = DEFENDER_SPEED_VERTICAL;
+            // defender.state.velocityInitial[2]=DEFENDER_SPEED_VERTICAL;
+            // defender.state.velocityCurrent[2]=DEFENDER_SPEED_VERTICAL;
+            //cout<<"nss easy"<<endl;
+           
+            // defender.state.accelerationCurrent[0] = 0;
+            // defender.state.accelerationCurrent[1] = 0;
+            // defender.state.accelerationCurrent[2] = -9.8;
+
+            if (defender.state.positionCurrent[2] <0) {
+                defender.state.positionCurrent[2] = 0;
+                defender.state.velocityCurrent[2] = -defender.state.velocityCurrent[2];
+            }
+             //cout<<defender.state.positionCurrent[0]<<" nishchay "<<defender.state.positionCurrent[2]<<" "<<defender.state.accelerationCurrent[2]<<" "<<defender.state.velocityCurrent[2]<<" "<<defender.state.velocityCurrent[0]<<endl;
         }
-        if (defender.state.velocityCurrent[0] > 0&&defender.state.accelerationCurrent[0]>0) {
-            defender.state.accelerationCurrent[0] = 0;
-            defender.state.velocityCurrent[0] = 0;
-            
-        }
-        // if (defender.state.positionCurrent[1] <= 0) {
-        //     defender.state.positionCurrent[1] = 0;
-        //     defender.state.velocityCurrent[1] = 0;
-        //     defender.state.accelerationCurrent[1]=0;
-        // }
+
+        
+        
     
 
 
