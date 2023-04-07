@@ -177,38 +177,40 @@ void initialiseEverything() {
     
     
     if(currentLevel==EASY){
-        
+        cout<<"easyssssssssssssssssss"<<endl;
         defender.state.velocityInitial[0] = defender.state.velocityCurrent[0] = DEFENDER_SPEED;
-        //defender.state.velocityInitial.y = defender.state.velocityCurrent.y = DEFENDER_SPEED_VERTICAL;
-        defender.state.velocityInitial[2]=DEFENDER_SPEED_VERTICAL;
-        defender.state.velocityCurrent[2]=DEFENDER_SPEED_VERTICAL;
+        defender.state.velocityInitial[2]=defender.state.velocityCurrent[2]=DEFENDER_SPEED_VERTICAL;
+        defender.state.velocityInitial.x = defender.state.velocityCurrent.x = DEFENDER_SPEED;
+        defender.state.velocityInitial.z=defender.state.velocityCurrent.z=DEFENDER_SPEED_VERTICAL;
+
         defender.state.accelerationCurrent[0] = 0;
         defender.state.accelerationCurrent[1] = 0;
         defender.state.accelerationCurrent[2] = -9.8;
+
         defender.state.positionCurrent[0] = 0;
         defender.state.positionCurrent[1] = 0;
         defender.state.positionCurrent[2] = 0;
-        defender.state.velocityInitial.x = DEFENDER_SPEED;
-    defender.state.velocityCurrent.x = DEFENDER_SPEED;
-    defender.state.velocityInitial.y = DEFENDER_SPEED_VERTICAL;
-    defender.state.velocityCurrent.y = DEFENDER_SPEED_VERTICAL;
 
     }
     if(currentLevel==HUMAN){
+        cout<<"human"<<endl;
         defender.state.velocityInitial[2]=0;//DEFENDER_SPEED_VERTICAL;
         defender.state.velocityCurrent[2]=0;//DEFENDER_SPEED_VERTICAL;
         defender.state.velocityInitial[0]=0;//DEFENDER_SPEED_VERTICAL;
         defender.state.velocityCurrent[0]=0;//DEFENDER_SPEED_VERTICAL;
+
         defender.state.accelerationCurrent[2] = 0;
         defender.state.accelerationCurrent[0] = 0;
         defender.state.accelerationCurrent[1] = 0;
+
         defender.state.positionCurrent[0] = 0;
         defender.state.positionCurrent[1] = 0;
         defender.state.positionCurrent[2] = 0;
+
         defender.state.velocityInitial.x = 0;//DEFENDER_SPEED;
-    defender.state.velocityCurrent.x = 0;//DEFENDER_SPEED;
-    defender.state.velocityInitial.y = 0;//DEFENDER_SPEED_VERTICAL;
-    defender.state.velocityCurrent.y = 0;//DEFENDER_SPEED_VERTICAL;
+        defender.state.velocityCurrent.x = 0;//DEFENDER_SPEED;
+        defender.state.velocityInitial.y = 0;//DEFENDER_SPEED_VERTICAL;
+        defender.state.velocityCurrent.y = 0;//DEFENDER_SPEED_VERTICAL;
     }
     // defender.state.velocityInitial[0]= defender.state.velocityCurrent[0] = DEFENDER_SPEED;
     //         defender.state.velocityInitial[2] = defender.state.velocityCurrent[2] = DEFENDER_SPEED_VERTICAL;
@@ -535,15 +537,10 @@ void updateDefenderPosition(int _) {
 //         }
 
         
-        for (int i = 0; i < 3; ++i) {
-            defender.state.positionCurrent[i] +=
-                    defender.state.velocityCurrent[i] * t + 0.5 * defender.state.accelerationCurrent[i] * t * t ;
-                    
-            defender.state.velocityCurrent[i] +=
-                    defender.state.velocityCurrent[i] + defender.state.accelerationCurrent[i] * t;
-        }
+        
 
         if(currentLevel==HUMAN){
+            
             if (defender.state.positionCurrent[2] <= 0) {
                 defender.state.positionCurrent[2] = 0;
                 defender.state.velocityCurrent[2] = 0;
@@ -559,8 +556,22 @@ void updateDefenderPosition(int _) {
                 defender.state.velocityCurrent[0] = 0;
                 
             }
+            cout<<defender.state.positionCurrent[0]<<" human "<<defender.state.positionCurrent[2]<<" "<<defender.state.accelerationCurrent[2]<<" "<<defender.state.velocityCurrent[2]<<" "<<defender.state.velocityCurrent[0]<<endl;
+      
         }
         if(currentLevel==EASY){
+        //     defender.state.velocityInitial[0] = defender.state.velocityCurrent[0] = DEFENDER_SPEED;
+        // defender.state.velocityInitial[2]=defender.state.velocityCurrent[2]=DEFENDER_SPEED_VERTICAL;
+        // defender.state.velocityInitial.x = defender.state.velocityCurrent.x = DEFENDER_SPEED;
+        // defender.state.velocityInitial.z=defender.state.velocityCurrent.z=DEFENDER_SPEED_VERTICAL;
+
+        defender.state.accelerationCurrent[0] = 0;
+        defender.state.accelerationCurrent[1] = 0;
+        defender.state.accelerationCurrent[2] = -9.8;
+
+        // defender.state.positionCurrent[0] = 0;
+        // defender.state.positionCurrent[1] = 0;
+        // defender.state.positionCurrent[2] = 0;
             // defender.state.velocityInitial[0]= defender.state.velocityCurrent[0] = DEFENDER_SPEED;
             // defender.state.velocityInitial[2] = defender.state.velocityCurrent[2] = DEFENDER_SPEED_VERTICAL;
             // defender.state.velocityInitial[2]=DEFENDER_SPEED_VERTICAL;
@@ -575,10 +586,16 @@ void updateDefenderPosition(int _) {
                 defender.state.positionCurrent[2] = 0;
                 defender.state.velocityCurrent[2] = -defender.state.velocityCurrent[2];
             }
-             //cout<<defender.state.positionCurrent[0]<<" nishchay "<<defender.state.positionCurrent[2]<<" "<<defender.state.accelerationCurrent[2]<<" "<<defender.state.velocityCurrent[2]<<" "<<defender.state.velocityCurrent[0]<<endl;
+             cout<<defender.state.positionCurrent[0]<<" easy "<<defender.state.positionCurrent[2]<<" "<<defender.state.accelerationCurrent[2]<<" "<<defender.state.velocityCurrent[2]<<" "<<defender.state.velocityCurrent[0]<<endl;
         }
 
-        
+        for (int i = 0; i < 3; ++i) {
+            defender.state.positionCurrent[i] +=
+                    defender.state.velocityCurrent[i] * t + 0.5 * defender.state.accelerationCurrent[i] * t * t ;
+                    
+            defender.state.velocityCurrent[i] +=
+                    defender.state.velocityCurrent[i] + defender.state.accelerationCurrent[i] * t;
+        }
         
     
 

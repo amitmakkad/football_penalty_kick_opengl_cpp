@@ -327,6 +327,12 @@ void handleKeypress(unsigned char key, //The key that was pressed
         }
         else if(key=='2'){
             currentLevel=EASY;
+
+
+          defender.state.velocityInitial[0] = defender.state.velocityCurrent[0] = DEFENDER_SPEED;
+        defender.state.velocityInitial[2]=defender.state.velocityCurrent[2]=DEFENDER_SPEED_VERTICAL;
+        defender.state.velocityInitial.x = defender.state.velocityCurrent.x = DEFENDER_SPEED;
+        defender.state.velocityInitial.z=defender.state.velocityCurrent.z=DEFENDER_SPEED_VERTICAL;
             cout<<"easy"<<endl;
         }
         else if(key=='3'){
