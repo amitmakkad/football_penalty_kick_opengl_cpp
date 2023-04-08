@@ -17,6 +17,7 @@ using namespace std;
 bool poleCollided[3];
 bool stopEverything = false;
 unsigned int Tries, Goals;
+int prevGoals;
 vector<float> currentTextColor = {1, 1, 1, 1};
 
 void showScore();
@@ -229,12 +230,33 @@ void draw() {
     ground.draw();
     defender.draw();
     showScore();
+   
+    
+    // if(Tries==3){
+    //                     string msg="";
+    //                    if(Goals>Tries-Goals)msg="A-WIN";
+    //                    else msg="D-WIN";
 
-    showMsg();
+    //                    resultMsg(msg);
+    //                    Tries=0;
+    //                    Goals=0;  
+    //                     //rotateMsg(0);
+    //                     cout<<"fff"<<endl;
+                
+    //                 }
+    //             else
+    //                 showMsg();
+    
+    resultMsg();
+    
+
+    
+    
 
 //    loadTextureFile("");
+   
     drawHUD();
-
+   
 
     glutSwapBuffers();
     glutPostRedisplay();
@@ -284,7 +306,10 @@ void showScore() {
     currentTextColor = {32 / 255.0, 140 / 255.0, 32 / 255.0, 1.0};
     glTranslatef(POLE_LENGTH / 2, 0, 1);
 //    glScalef(FONT_SIZE,FONT_SIZE,FONT_SIZE);
-    writeText(to_string(Goals), font, RIGHT);
+int y=Goals-prevGoals;
+if(y<0) y=0;
+y=y%5;
+    writeText(to_string(y), font, RIGHT);
     glPopMatrix();
 
     glPushMatrix();
@@ -298,7 +323,12 @@ void showScore() {
     currentTextColor = {0.1, 0.1, 1.0, 1.0};
     glTranslatef(POLE_LENGTH / 2, 0, 0);
 //    glScalef(FONT_SIZE,FONT_SIZE,FONT_SIZE);
-    unsigned int x=Tries-Goals;
+    int x=Tries%5-y;
+    if(Tries%5==0&&Tries!=0){
+        x=5-y;
+    }
+    if(x<0) x=0;
+    x=x%5;
     writeText(to_string(x), font, RIGHT);
     glPopMatrix();
 
@@ -320,7 +350,41 @@ void incrementPowerMeter(int _) {
 void handleKeypress(unsigned char key, //The key that was pressed
                     int x, int y) {    //The current mouse coordinates
 
+    if(currentMode==CHOOSE){
+        if(key=='1'){
+            currentLevel=HUMAN;
+            cout<<"human"<<endl;
+        }
+        else if(key=='2'){
+            currentLevel=EASY;
 
+
+          defender.state.velocityInitial[0] = defender.state.velocityCurrent[0] = DEFENDER_SPEED_EASY;
+        defender.state.velocityInitial[2]=defender.state.velocityCurrent[2]=DEFENDER_SPEED_VERTICAL;
+        defender.state.velocityInitial.x = defender.state.velocityCurrent.x = DEFENDER_SPEED_EASY;
+        defender.state.velocityInitial.z=defender.state.velocityCurrent.z=DEFENDER_SPEED_VERTICAL;
+        // defender.state.accelerationCurrent[2] = -9.8;
+            cout<<"easy"<<endl;
+        }
+        else if(key=='3'){
+            currentLevel=MEDIUM;
+            defender.state.velocityInitial[0] = defender.state.velocityCurrent[0] = DEFENDER_SPEED_MEDIUM;
+        defender.state.velocityInitial[2]=defender.state.velocityCurrent[2]=DEFENDER_SPEED_VERTICAL;
+        defender.state.velocityInitial.x = defender.state.velocityCurrent.x = DEFENDER_SPEED_MEDIUM;
+        defender.state.velocityInitial.z=defender.state.velocityCurrent.z=DEFENDER_SPEED_VERTICAL;
+        // defender.state.accelerationCurrent[2] = -19.8;
+        }
+        else if(key=='4'){
+            currentLevel=HARD;
+            defender.state.velocityInitial[0] = defender.state.velocityCurrent[0] = DEFENDER_SPEED_HARD;
+        defender.state.velocityInitial[2]=defender.state.velocityCurrent[2]=DEFENDER_SPEED_VERTICAL;
+        defender.state.velocityInitial.x = defender.state.velocityCurrent.x = DEFENDER_SPEED_HARD;
+        defender.state.velocityInitial.z=defender.state.velocityCurrent.z=DEFENDER_SPEED_VERTICAL;
+        // defender.state.accelerationCurrent[2] = -29.8;
+        }
+        currentMode=ADJUSTING;
+        
+    }
     
 
     if (currentMode != HELP) {
@@ -337,10 +401,12 @@ void handleKeypress(unsigned char key, //The key that was pressed
 //            cout<<sphereCamera.distance<<endl;
                 break;
         }
-    } else {
-        if (key == 27) {
-            currentMode = ADJUSTING;
-        }
+    } 
+    else {
+        if (key == 27){
+            currentMode = CHOOSE;
+        } 
+        
     }
     
     downKeys[key] = true;
@@ -363,32 +429,31 @@ void handleKeypress(unsigned char key, //The key that was pressed
                 currentMode = ADJUSTING;
         }
     }
-    if(key==97){
-        //left
-    
-        defender.state.velocityInitial.x = -DEFENDER_SPEED;
-    defender.state.velocityCurrent.x = -DEFENDER_SPEED;
-
-defender.state.accelerationCurrent[0] = 10;
-    }
-    if(key==100){
-        //right
-          defender.state.velocityInitial.x = DEFENDER_SPEED;
-    defender.state.velocityCurrent.x = DEFENDER_SPEED;
-    defender.state.accelerationCurrent[0] = -10;
-    }
-    if(key==119){
-        //up
-        if(defender.state.positionCurrent[2]==0){
-    //              defender.state.velocityInitial.y = DEFENDER_SPEED_VERTICAL;
-    // defender.state.velocityCurrent.y = DEFENDER_SPEED_VERTICAL;
-
-        defender.state.velocityInitial[2]=DEFENDER_SPEED_VERTICAL;
-        defender.state.velocityCurrent[2]=DEFENDER_SPEED_VERTICAL;
-        defender.state.accelerationCurrent[2] = -9.8;
+    if(currentLevel==HUMAN){
+        if(key==97){
+            //left
+        
+            defender.state.velocityInitial.x = -DEFENDER_SPEED;
+            defender.state.velocityCurrent.x = -DEFENDER_SPEED;
+            defender.state.accelerationCurrent[0] = 10;
         }
-       
+        if(key==100){
+            //right
+            defender.state.velocityInitial.x = DEFENDER_SPEED;
+            defender.state.velocityCurrent.x = DEFENDER_SPEED;
+            defender.state.accelerationCurrent[0] = -10;
+        }
+        if(key==119){
+            //up
+            if(defender.state.positionCurrent[2]==0){
+                defender.state.velocityInitial[2]=DEFENDER_SPEED_VERTICAL;
+                defender.state.velocityCurrent[2]=DEFENDER_SPEED_VERTICAL;
+                defender.state.accelerationCurrent[2] = -9.8;
+            }
+        
+        }
     }
+    
 
     
 
@@ -428,9 +493,21 @@ void idle() {
                         system("paplay resources/goal.wav&");
                     }
 
-                    rotateMsg(0);
+                    
                     glutTimerFunc(1000 * RESET_TIME, initialiseEverythingCallback, 0);
                     Tries++;
+                    cout<<Tries<<endl;
+                    if(Tries%5==0){
+                       
+                      // resultMsg(msg); 
+                
+        
+    
+                       
+                        rotateMsg(0);
+                        
+                    }
+                    
                 }
             }
         }
@@ -576,13 +653,8 @@ int main(int argc, char *argv[]) {
 //    convertToTexture("resources/texture.txt", "resources/texture.texture");
     initialiseEverything();
     currentMode = HELP;
+    currentLevel=NIL;
 
-
-
-
-
-
-    
 
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA | GLUT_MULTISAMPLE);
@@ -590,7 +662,7 @@ int main(int argc, char *argv[]) {
     glutCreateWindow(WINDOW_NAME);
     glutFullScreen();
     glutReshapeFunc(handleResize);
-    glutIdleFunc(idle);
+    
     glutKeyboardFunc(handleKeypress);
     glutKeyboardUpFunc(handleUpKeypress);
     glutSpecialFunc(handleSpecialKeypress);
@@ -605,6 +677,8 @@ int main(int argc, char *argv[]) {
     glutMouseFunc(NULL);
     // glutMotionFunc(move_mouse);
     glutDisplayFunc(draw);
+    glutIdleFunc(idle);
+    
     myInit();
     glutMainLoop();
 

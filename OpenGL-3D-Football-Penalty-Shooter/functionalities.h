@@ -70,10 +70,13 @@ extern camera sphereCamera;
 void myShear();
 
 void drawHUD();
-
+void draw_options();
 
 enum mode {
-    ADJUSTING, AIMING, POWERING, SHOOTING, HELP, NONE
+    ADJUSTING, AIMING, POWERING, SHOOTING, HELP, NONE , CHOOSE
+};
+enum level {
+    HUMAN, EASY, MEDIUM, HARD, NIL
 };
 
 void backgroundMusicPlayer(int);
@@ -92,6 +95,7 @@ void end2DTexture(bool lightingDisabled = true);
 
 
 extern mode currentMode;
+extern level currentLevel;
 
 extern bool currentlyWaiting;
 extern bool stopEverything;
@@ -103,7 +107,7 @@ extern PhysicalState sphere, *determineSphere;
 
 extern bool scoredGoal;
 
-extern int goalCount, totalTries;
+extern int prevGoals;
 
 void drawBitmapText(const char *string,float x,float y);
 
@@ -119,7 +123,9 @@ float writeText(string text, int texture, alignment align = LEFT);
 float writeMultiLineText(string text, int texture, alignment align = LEFT);
 void drawChalkLines();
 
-void showMsg();
+// void showMsg();
+void resultMsg();
+// void fun();
 void rotateMsg(int _);
 
 extern axes toLookAt;

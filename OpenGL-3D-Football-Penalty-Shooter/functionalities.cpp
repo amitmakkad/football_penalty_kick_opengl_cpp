@@ -8,12 +8,11 @@
 
 using namespace std;
 
-
+level currentLevel=NIL;
 mode currentMode = ADJUSTING;
 bool currentlyWaiting;
 bool downKeys[127];
 bool scoredGoal;
-int goalCount, totalTries;
 int mouseX, mouseY;
 bool firstTime = true;
 PhysicalState sphere, *determineSphere = NULL;
@@ -169,23 +168,91 @@ void initialiseEverything() {
 
     defender.width = DEFENDER_WIDTH;
     defender.height = 2.3;
-
-    defender.state.velocityInitial.x = 0;//DEFENDER_SPEED;
-    defender.state.velocityCurrent.x = 0;//DEFENDER_SPEED;
-    defender.state.velocityInitial.y = 0;//DEFENDER_SPEED_VERTICAL;
-    defender.state.velocityCurrent.y = 0;//DEFENDER_SPEED_VERTICAL;
     
 
-    defender.state.velocityInitial[2]=0;//DEFENDER_SPEED_VERTICAL;
-    defender.state.velocityCurrent[2]=0;//DEFENDER_SPEED_VERTICAL;
-    defender.state.velocityInitial[1]=0;//DEFENDER_SPEED_VERTICAL;
-    defender.state.velocityCurrent[1]=0;//DEFENDER_SPEED_VERTICAL;
-    defender.state.positionCurrent.x = 0.0;
-    defender.state.positionCurrent.y = 0.0;
-    defender.state.positionCurrent.z = 0.0;
-    defender.state.accelerationCurrent[2] = 0;
-    defender.state.accelerationCurrent[0] = 0;
-    defender.state.accelerationCurrent[1] = 0;
+    
+    
+
+    
+    
+    if(currentLevel==EASY){
+        cout<<"easyssssssssssssssssss"<<endl;
+        defender.state.velocityInitial[0] = defender.state.velocityCurrent[0] = DEFENDER_SPEED_EASY;
+        defender.state.velocityInitial[2]=defender.state.velocityCurrent[2]=DEFENDER_SPEED_VERTICAL;
+        defender.state.velocityInitial.x = defender.state.velocityCurrent.x = DEFENDER_SPEED_EASY;
+        defender.state.velocityInitial.z=defender.state.velocityCurrent.z=DEFENDER_SPEED_VERTICAL;
+
+        defender.state.accelerationCurrent[0] = 0;
+        defender.state.accelerationCurrent[1] = 0;
+        defender.state.accelerationCurrent[2] = -9.8;
+
+        defender.state.positionCurrent[0] = 0;
+        defender.state.positionCurrent[1] = 0;
+        defender.state.positionCurrent[2] = 0;
+
+    }
+    if(currentLevel==MEDIUM){
+        // cout<<"easyssssssssssssssssss"<<endl;
+        defender.state.velocityInitial[0] = defender.state.velocityCurrent[0] = DEFENDER_SPEED_MEDIUM;
+        defender.state.velocityInitial[2]=defender.state.velocityCurrent[2]=DEFENDER_SPEED_VERTICAL;
+        defender.state.velocityInitial.x = defender.state.velocityCurrent.x = DEFENDER_SPEED_MEDIUM;
+        defender.state.velocityInitial.z=defender.state.velocityCurrent.z=DEFENDER_SPEED_VERTICAL;
+
+        defender.state.accelerationCurrent[0] = 0;
+        defender.state.accelerationCurrent[1] = 0;
+        defender.state.accelerationCurrent[2] = -9.8;
+
+        defender.state.positionCurrent[0] = 0;
+        defender.state.positionCurrent[1] = 0;
+        defender.state.positionCurrent[2] = 0;
+
+    }
+    if(currentLevel==HARD){
+        cout<<"easyssssssssssssssssss"<<endl;
+        defender.state.velocityInitial[0] = defender.state.velocityCurrent[0] = DEFENDER_SPEED_HARD;
+        defender.state.velocityInitial[2]=defender.state.velocityCurrent[2]=DEFENDER_SPEED_VERTICAL;
+        defender.state.velocityInitial.x = defender.state.velocityCurrent.x = DEFENDER_SPEED_HARD;
+        defender.state.velocityInitial.z=defender.state.velocityCurrent.z=DEFENDER_SPEED_VERTICAL;
+
+        defender.state.accelerationCurrent[0] = 0;
+        defender.state.accelerationCurrent[1] = 0;
+        defender.state.accelerationCurrent[2] = -9.8;
+
+        defender.state.positionCurrent[0] = 0;
+        defender.state.positionCurrent[1] = 0;
+        defender.state.positionCurrent[2] = 0;
+
+    }
+
+    if(currentLevel==HUMAN){
+        cout<<"human"<<endl;
+        defender.state.velocityInitial[2]=0;//DEFENDER_SPEED_VERTICAL;
+        defender.state.velocityCurrent[2]=0;//DEFENDER_SPEED_VERTICAL;
+        defender.state.velocityInitial[0]=0;//DEFENDER_SPEED_VERTICAL;
+        defender.state.velocityCurrent[0]=0;//DEFENDER_SPEED_VERTICAL;
+
+        defender.state.accelerationCurrent[2] = 0;
+        defender.state.accelerationCurrent[0] = 0;
+        defender.state.accelerationCurrent[1] = 0;
+
+        defender.state.positionCurrent[0] = 0;
+        defender.state.positionCurrent[1] = 0;
+        defender.state.positionCurrent[2] = 0;
+
+        defender.state.velocityInitial.x = 0;//DEFENDER_SPEED;
+        defender.state.velocityCurrent.x = 0;//DEFENDER_SPEED;
+        defender.state.velocityInitial.y = 0;//DEFENDER_SPEED_VERTICAL;
+        defender.state.velocityCurrent.y = 0;//DEFENDER_SPEED_VERTICAL;
+    }
+    // defender.state.velocityInitial[0]= defender.state.velocityCurrent[0] = DEFENDER_SPEED;
+    //         defender.state.velocityInitial[2] = defender.state.velocityCurrent[2] = DEFENDER_SPEED_VERTICAL;
+    //         defender.state.velocityInitial[2]=DEFENDER_SPEED_VERTICAL;
+    //         defender.state.velocityCurrent[2]=DEFENDER_SPEED_VERTICAL;
+    //         cout<<"nss easy"<<endl;
+           
+    //         defender.state.accelerationCurrent[0] = 0;
+    //         defender.state.accelerationCurrent[1] = 0;
+    //         defender.state.accelerationCurrent[2] = -9.8;
     
 
     sphereCamera.xAngle = -90.0f;
@@ -196,7 +263,7 @@ void initialiseEverything() {
         sphere.positionCurrent[i] = sphere.velocityCurrent[i] = 0;
     }
     powerMeter = 0.0;
-    currentMode = ADJUSTING;
+    currentMode = CHOOSE;
 
     sphere.positionInitial.x = sphere.positionCurrent.x = 0.0;
     sphere.velocityCurrent[0] = sphere.velocityInitial[0] = 0;
@@ -343,30 +410,161 @@ void drawPowerMeter() {
 }
 
 
+// void drawHUD() {
+//     glDisable(GL_LIGHTING);
+//     if (currentMode == HELP) {
+
+//         const char *instructions = R"INSTRUCT(
+//         INSTRUCTIONS
+//         You can use the mouse to look around.
+//         Use the +/- keys for zooming in/out.
+
+//         AIMING
+//         Press the Enter/Return key to enter Aiming Mode.
+//         Direct the arrow with the arrow keys to set up the
+//         direction of the shot.
+
+//         POWERING
+//         Press and hold Space after aiming to power up.
+//         Release Space to select the specified power level.
+//         Press the ESC key (when holding down SPACE) to cancel
+//         POWERING mode.
+
+//         Press ESC key to return to the previous mode or to exit the
+//         instructions.
+//         Press Q at any time to exit the game.
+//         )INSTRUCT";
+
+//         glPushMatrix();
+//         glRotatef(90 + sphereCamera.xAngle, 0, 0, 1);
+//         glRotatef(-sphereCamera.zAngle, 1, 0, 0);
+
+//         glTranslatef(0, -BALL_RADIUS, -BALL_RADIUS);
+
+//         glColor4f(0, 0, 0, 0.8);
+//         glBegin(GL_QUADS);
+//         glVertex3f(-10, 0, -5);
+//         glVertex3f(10, 0, -5);
+//         glVertex3f(10, 0, 6);
+//         glVertex3f(-10, 0, 6);
+//         glEnd();
+//         glScalef(0.5, 0.5, 0.5);
+//         glTranslatef(0, -0.001, 9.5);
+
+//         currentTextColor = {1.0, 1.0, 1.0, 1.0};
+//         writeMultiLineText(instructions, font, CENTER);
+//         glPopMatrix();
+//     } 
+//     else {   //HUD Render
+//         if(currentMode==CHOOSE){
+//             if(Tries%5==0){
+//                 cout<<" nia"<<endl;
+//                 prevGoals=Goals;
+            
+//                 const char *instruction = R"INSTRUCT(
+//                 Choose:-
+//                 PLAY WITH HUMAN:-
+//                 HUMAN - 1
+//                 PLAY WITH COMPUTER:-
+//                 EASY - 2   
+//                 MEDIUM - 3
+//                 HARD - 4
+
+//                 )INSTRUCT";
+
+//                 glPushMatrix();
+//                 glRotatef(90 + sphereCamera.xAngle, 0, 0, 1);
+//                 glRotatef(-sphereCamera.zAngle, 1, 0, 0);
+
+//                 glTranslatef(0, -BALL_RADIUS, -BALL_RADIUS);
+
+//                 glColor4f(0, 0, 0, 0.8);
+//                 glBegin(GL_QUADS);
+//                 glVertex3f(-10, 0, -5);
+//                 glVertex3f(10, 0, -5);
+//                 glVertex3f(10, 0, 6);
+//                 glVertex3f(-10, 0, 6);
+//                 glEnd();
+//                 glScalef(0.5, 0.5, 0.5);
+//                 glTranslatef(0, -0.001, 9.5);
+
+//                 currentTextColor = {1.0, 1.0, 1.0, 1.0};
+//                 writeMultiLineText(instruction, font, CENTER);
+//                 glPopMatrix();
+//             }
+//             else{
+//                 glDisable(GL_LIGHTING);
+//                 glMatrixMode(GL_PROJECTION);
+//                 glPushAttrib(GL_CURRENT_BIT);
+//                 glPushMatrix();
+//                 glLoadIdentity();
+//                 gluOrtho2D(-100.0, 100.0, -100.0, 100.0);       //glutGet(GLUT_WINDOW_WIDTH) / glutGet(GLUT_WINDOW_HEIGHT)
+//                 glMatrixMode(GL_MODELVIEW);
+//                 glLoadIdentity();
+//         //        glDisable(GL_CULL_FACE);
+
+//                 glClear(GL_DEPTH_BUFFER_BIT);
+
+//             }
+//         }
+//         if (currentMode == POWERING) {   //Power Bar
+//             glPushMatrix();
+
+//             glTranslatef(90, 0, 0);
+
+
+//             glScalef(0.3, 4.0, 1.0);
+
+//             drawPowerMeter();
+
+
+//             rainBox();
+//             glScalef(1.0, -1.0, 0.0);
+//             rainBox();
+
+//             glPopMatrix();
+//         }
+    
+        
+
+// // Making sure we can render 3d again
+
+//         glEnable(GL_LIGHTING);
+//         glMatrixMode(GL_PROJECTION);
+//         glPopAttrib();
+//         glPopMatrix();
+//         glMatrixMode(GL_MODELVIEW);
+
+//     }
+
+    
+
+
+//     glEnable(GL_LIGHTING);
+// }
+
+
 void drawHUD() {
     glDisable(GL_LIGHTING);
     if (currentMode == HELP) {
 
         const char *instructions = R"INSTRUCT(
-INSTRUCTIONS
-You can use the mouse to look around.
-Use the +/- keys for zooming in/out.
-
-AIMING
-Press the Enter/Return key to enter Aiming Mode.
-Direct the arrow with the arrow keys to set up the
-direction of the shot.
-
-POWERING
-Press and hold Space after aiming to power up.
-Release Space to select the specified power level.
-Press the ESC key (when holding down SPACE) to cancel
-POWERING mode.
-
-Press ESC key to return to the previous mode or to exit the
-instructions.
-Press Q at any time to exit the game.
-)INSTRUCT";
+        INSTRUCTIONS
+        You can use the mouse to look around.
+        Use the +/- keys for zooming in/out.
+        AIMING
+        Press the Enter/Return key to enter Aiming Mode.
+        Direct the arrow with the arrow keys to set up the
+        direction of the shot.
+        POWERING
+        Press and hold Space after aiming to power up.
+        Release Space to select the specified power level.
+        Press the ESC key (when holding down SPACE) to cancel
+        POWERING mode.
+        Press ESC key to return to the previous mode or to exit the
+        instructions.
+        Press Q at any time to exit the game.
+        )INSTRUCT";
 
         glPushMatrix();
         glRotatef(90 + sphereCamera.xAngle, 0, 0, 1);
@@ -387,8 +585,40 @@ Press Q at any time to exit the game.
         currentTextColor = {1.0, 1.0, 1.0, 1.0};
         writeMultiLineText(instructions, font, CENTER);
         glPopMatrix();
-    } else {   //HUD Render
+    } 
+    else {   //HUD Render
+        if(currentMode==CHOOSE&&Tries%5==0){
+            prevGoals=Goals;
+        const char *instruction = R"INSTRUCT(
+        Choose:-
+        PLAY WITH HUMAN:-
+        HUMAN - 1
+        PLAY WITH COMPUTER:-
+        EASY - 2   
+        MEDIUM - 3
+        HARD - 4
+        )INSTRUCT";
 
+        glPushMatrix();
+        glRotatef(90 + sphereCamera.xAngle, 0, 0, 1);
+        glRotatef(-sphereCamera.zAngle, 1, 0, 0);
+
+        glTranslatef(0, -BALL_RADIUS, -BALL_RADIUS);
+
+        glColor4f(0, 0, 0, 0.8);
+        glBegin(GL_QUADS);
+        glVertex3f(-10, 0, -5);
+        glVertex3f(10, 0, -5);
+        glVertex3f(10, 0, 6);
+        glVertex3f(-10, 0, 6);
+        glEnd();
+        glScalef(0.5, 0.5, 0.5);
+        glTranslatef(0, -0.001, 9.5);
+
+        currentTextColor = {1.0, 1.0, 1.0, 1.0};
+        writeMultiLineText(instruction, font, CENTER);
+        glPopMatrix();
+    }else{
         glDisable(GL_LIGHTING);
         glMatrixMode(GL_PROJECTION);
         glPushAttrib(GL_CURRENT_BIT);
@@ -419,6 +649,7 @@ Press Q at any time to exit the game.
 
             glPopMatrix();
         }
+    }
 
 // Making sure we can render 3d again
 
@@ -429,8 +660,16 @@ Press Q at any time to exit the game.
         glMatrixMode(GL_MODELVIEW);
 
     }
+
+    
+
+
     glEnable(GL_LIGHTING);
 }
+
+
+
+
 void updateDefenderPosition(int _) {
 
     static float increment = 2.0f;
@@ -459,44 +698,85 @@ void updateDefenderPosition(int _) {
 //                 done = 1;
 //             }
 //         }
+
         
+        
+
+        if(currentLevel==HUMAN){
+            
+            if (defender.state.positionCurrent[2] < 0) {
+                defender.state.positionCurrent[2] = 0;
+                defender.state.velocityCurrent[2] = 0;
+                defender.state.accelerationCurrent[2]=0;
+            }
+            else{
+                defender.state.accelerationCurrent[2]=-9.8;
+            }
+            if (defender.state.velocityCurrent[0] < 0&&defender.state.accelerationCurrent[0]<0) {
+                defender.state.accelerationCurrent[0] = 0;
+                defender.state.velocityCurrent[0] = 0;
+                
+            }
+            if (defender.state.velocityCurrent[0] > 0&&defender.state.accelerationCurrent[0]>0) {
+                defender.state.accelerationCurrent[0] = 0;
+                defender.state.velocityCurrent[0] = 0;
+                
+            }
+            // cout<<defender.state.positionCurrent[0]<<" human "<<defender.state.positionCurrent[2]<<" "<<defender.state.accelerationCurrent[2]<<" "<<defender.state.velocityCurrent[2]<<" "<<defender.state.velocityCurrent[0]<<endl;
+      
+        }
+        if(currentLevel==EASY){
+        
+        defender.state.accelerationCurrent[0] = 0;
+        defender.state.accelerationCurrent[1] = 0;
+        defender.state.accelerationCurrent[2] = -9.8;
+
+        
+
+            if (defender.state.positionCurrent[2] <0) {
+                defender.state.positionCurrent[2] = 0;
+                defender.state.velocityCurrent[2] = -defender.state.velocityCurrent[2];
+            }
+            //  cout<<defender.state.positionCurrent[0]<<" easy "<<defender.state.positionCurrent[2]<<" "<<defender.state.accelerationCurrent[2]<<" "<<defender.state.velocityCurrent[2]<<" "<<defender.state.velocityCurrent[0]<<endl;
+        }
+        if(currentLevel==MEDIUM){
+        
+        defender.state.accelerationCurrent[0] = 0;
+        defender.state.accelerationCurrent[1] = 0;
+        defender.state.accelerationCurrent[2] = -9.8;
+
+        
+
+            if (defender.state.positionCurrent[2] <0) {
+                defender.state.positionCurrent[2] = 0;
+                defender.state.velocityCurrent[2] = -defender.state.velocityCurrent[2];
+            }
+            //  cout<<defender.state.positionCurrent[0]<<" easy "<<defender.state.positionCurrent[2]<<" "<<defender.state.accelerationCurrent[2]<<" "<<defender.state.velocityCurrent[2]<<" "<<defender.state.velocityCurrent[0]<<endl;
+        }
+       if(currentLevel==HARD){
+        
+        defender.state.accelerationCurrent[0] = 0;
+        defender.state.accelerationCurrent[1] = 0;
+        defender.state.accelerationCurrent[2] = -9.8;
+
+        
+
+            if (defender.state.positionCurrent[2] <0) {
+                defender.state.positionCurrent[2] = 0;
+                defender.state.velocityCurrent[2] = -defender.state.velocityCurrent[2];
+            }
+            //  cout<<defender.state.positionCurrent[0]<<" easy "<<defender.state.positionCurrent[2]<<" "<<defender.state.accelerationCurrent[2]<<" "<<defender.state.velocityCurrent[2]<<" "<<defender.state.velocityCurrent[0]<<endl;
+        }
+
         for (int i = 0; i < 3; ++i) {
-            defender.state.positionCurrent[i] =
-                    defender.state.velocityCurrent[i] * t + 0.5 * defender.state.accelerationCurrent[i] * t * t +
-                    defender.state.positionCurrent[i];
+            defender.state.positionCurrent[i] +=
+                    defender.state.velocityCurrent[i] * t + 0.5 * defender.state.accelerationCurrent[i] * t * t ;
+                    
             defender.state.velocityCurrent[i] =
                     defender.state.velocityCurrent[i] + defender.state.accelerationCurrent[i] * t;
         }
-
-        if (defender.state.positionCurrent[2] <= 0) {
-            defender.state.positionCurrent[2] = 0;
-            defender.state.velocityCurrent[2] = 0;
-            defender.state.accelerationCurrent[2]=0;
-        }
-        if (defender.state.velocityCurrent[0] < 0&&defender.state.accelerationCurrent[0]<0) {
-            defender.state.accelerationCurrent[0] = 0;
-            defender.state.velocityCurrent[0] = 0;
-            
-        }
-        if (defender.state.velocityCurrent[0] > 0&&defender.state.accelerationCurrent[0]>0) {
-            defender.state.accelerationCurrent[0] = 0;
-            defender.state.velocityCurrent[0] = 0;
-            
-        }
-        // if (defender.state.positionCurrent[1] <= 0) {
-        //     defender.state.positionCurrent[1] = 0;
-        //     defender.state.velocityCurrent[1] = 0;
-        //     defender.state.accelerationCurrent[1]=0;
-        // }
-    
-
-
-
-
-
-//    if (currentMode != NONE && currentMode != GOAL_ANIMATION){
-//    }
     }
+    
     else{
         done=0;
     };
@@ -710,17 +990,100 @@ float writeText(string text, int texture, alignment align) {
 int textRotX;
 
 void rotateMsg(int _) {
-    // textRotX = (textRotX + 3) % 360;
+    
+    textRotX = (textRotX + 3) % 360;
 
-    // if (textRotX != 0) {
-    //     glutTimerFunc(1, rotateMsg, 0);
-    // }
+    if (textRotX != 0) {
+        glutTimerFunc(1, rotateMsg, 0);
+    }
+    
+    
 }
 
 
-void showMsg() {
-    glPushMatrix();
+// void showMsg() {
+//     glPushMatrix();
 
+//     float col[] = {132 / 255.0, 121 / 255.0, 150 / 255.0, 0.7};
+// //    float col[] = {1,0,0,1};
+
+//     float distance = sphereCamera.distance - 4;
+
+//     float colin[] = {1.0, 1.0, 1.0, 0.7};
+//     glTranslatef(distance * (cos(DEG2GRAD(sphereCamera.zAngle)) * cos(DEG2GRAD(sphereCamera.xAngle))),
+//                  distance * (cos(DEG2GRAD(sphereCamera.zAngle)) * sin(DEG2GRAD(sphereCamera.xAngle))),
+//                  distance * sin(DEG2GRAD(sphereCamera.zAngle)));
+//     glTranslatef(toLookAt.x, toLookAt.y, toLookAt.z);
+//     glRotatef(90 + sphereCamera.xAngle + textRotX, 0, 0, 1);
+//     glRotatef(-sphereCamera.zAngle, 1, 0, 0);
+//     glScalef(0.75, 0.75, 0.75);
+
+//     bool toWrite = true;
+
+//     string msg = "MISS!";
+
+//     currentTextColor = {1.0, 0.3, 0.3, 1};
+//     if (determineSphere) {
+//         if (isItGoal(*determineSphere)) {
+//             msg = "GOAL!";
+//             currentTextColor = {0.3, 1.0, 0.3, 1};
+//         }
+//     }
+//     if (!determineSphere) {
+//         msg = "";
+//         toWrite = false;
+//     }
+//     if (toWrite) {
+//         GLUquadric *quad = gluNewQuadric();
+//         glPushMatrix();
+//         glColor4fv(col);
+//         glScalef(2, 0.5, 1);
+//         glRotatef(90, 1, 0, 0);
+//         // gluSphere(sphere, radius, slices, stacks);
+//         gluCylinder(quad, 1, 1, 1, 40, 40);
+//         // gluDisk(quad, 0.9, 1, 40, 40);
+//         glColor4fv(colin);
+//         // gluDisk(quad, 0, 0.9, 40, 40);
+
+//         glPopMatrix();
+
+//         glPushMatrix();
+
+//         glPushMatrix();
+//         glColor4fv(col);
+//         glScalef(2, 0.5, 1);
+//         glTranslatef(0, -1, 0);
+//         glRotatef(90, 1, 0, 0);
+//         gluDisk(quad, 0.9, 1, 40, 40);
+//         glColor4fv(colin);
+//         gluDisk(quad, 0, 0.9, 40, 40);
+//         glPopMatrix();
+//         gluDeleteQuadric(quad);
+//         glPopMatrix();
+
+
+//         glPushMatrix();
+//         glTranslatef(0, .001, -0.5);
+//         glRotatef(180, 0, 0, 1);
+//         writeText(msg, font, CENTER);
+
+//         glPopMatrix();
+
+
+//         glPushMatrix();
+//         glTranslatef(0, -0.501, -0.5);
+//         writeText(msg, font, CENTER);
+//         glPopMatrix();
+
+//     }
+//     glPopMatrix();
+// }
+void fun(string msg)
+{
+    
+  
+  
+     //glPushMatrix();
     float col[] = {132 / 255.0, 121 / 255.0, 150 / 255.0, 0.7};
 //    float col[] = {1,0,0,1};
 
@@ -734,24 +1097,7 @@ void showMsg() {
     glRotatef(90 + sphereCamera.xAngle + textRotX, 0, 0, 1);
     glRotatef(-sphereCamera.zAngle, 1, 0, 0);
     glScalef(0.75, 0.75, 0.75);
-
-    bool toWrite = true;
-
-    string msg = "D-WINS";
-
-    currentTextColor = {1.0, 0.3, 0.3, 1};
-    if (determineSphere) {
-        if (isItGoal(*determineSphere)) {
-            msg = "A-WINS";
-            currentTextColor = {0.3, 1.0, 0.3, 1};
-        }
-    }
-    if (!determineSphere) {
-        msg = "";
-        toWrite = false;
-    }
-    if (toWrite) {
-        GLUquadric *quad = gluNewQuadric();
+    GLUquadric *quad = gluNewQuadric();
         glPushMatrix();
         glColor4fv(col);
         glScalef(2, 0.5, 1);
@@ -782,6 +1128,7 @@ void showMsg() {
         glPushMatrix();
         glTranslatef(0, .001, -0.5);
         glRotatef(180, 0, 0, 1);
+        
         writeText(msg, font, CENTER);
 
         glPopMatrix();
@@ -792,6 +1139,107 @@ void showMsg() {
         writeText(msg, font, CENTER);
         glPopMatrix();
 
+}
+void resultMsg() {
+   
+//      glPushMatrix();
+//     float col[] = {132 / 255.0, 121 / 255.0, 150 / 255.0, 0.7};
+// //    float col[] = {1,0,0,1};
+
+//     float distance = sphereCamera.distance - 4;
+
+//     float colin[] = {1.0, 1.0, 1.0, 0.7};
+//     glTranslatef(distance * (cos(DEG2GRAD(sphereCamera.zAngle)) * cos(DEG2GRAD(sphereCamera.xAngle))),
+//                  distance * (cos(DEG2GRAD(sphereCamera.zAngle)) * sin(DEG2GRAD(sphereCamera.xAngle))),
+//                  distance * sin(DEG2GRAD(sphereCamera.zAngle)));
+//     glTranslatef(toLookAt.x, toLookAt.y, toLookAt.z);
+//     glRotatef(90 + sphereCamera.xAngle + textRotX, 0, 0, 1);
+//     glRotatef(-sphereCamera.zAngle, 1, 0, 0);
+//     glScalef(0.75, 0.75, 0.75);
+
+    bool toWrite = true;
+
+
+    string msg = "MISS!";
+    
+
+    currentTextColor = {1.0, 0.3, 0.3, 1};
+    if (determineSphere) {
+        if (isItGoal(*determineSphere)) {
+            msg = "GOAL!";
+            
+            currentTextColor = {0.3, 1.0, 0.3, 1};
+            
+        }
+    }
+    
+
+
+    if (!determineSphere) {
+        msg = "";
+        toWrite = false;
+    }
+    
+    if (toWrite) {
+        // cout<<msg<<" 999"<<endl;
+       
+        glPopMatrix();
+        if(Tries%5==0){
+        cout<<"TT"<<Tries<<" "<<Goals<<" "<<prevGoals<<endl;
+            if(Goals-prevGoals>5-Goals+prevGoals){
+                msg="A-WINS!";
+            }
+            else{
+                msg="D-WINS";
+            }
+             
+           // fun(msg);'
+            cout<<msg<<endl;
+    }
+     fun(msg);
+        // GLUquadric *quad = gluNewQuadric();
+        // glPushMatrix();
+        // glColor4fv(col);
+        // glScalef(2, 0.5, 1);
+        // glRotatef(90, 1, 0, 0);
+        // // gluSphere(sphere, radius, slices, stacks);
+        // gluCylinder(quad, 1, 1, 1, 40, 40);
+        // // gluDisk(quad, 0.9, 1, 40, 40);
+        // glColor4fv(colin);
+        // // gluDisk(quad, 0, 0.9, 40, 40);
+
+        // glPopMatrix();
+
+        // glPushMatrix();
+
+        // glPushMatrix();
+        // glColor4fv(col);
+        // glScalef(2, 0.5, 1);
+        // glTranslatef(0, -1, 0);
+        // glRotatef(90, 1, 0, 0);
+        // gluDisk(quad, 0.9, 1, 40, 40);
+        // glColor4fv(colin);
+        // gluDisk(quad, 0, 0.9, 40, 40);
+        // glPopMatrix();
+        // gluDeleteQuadric(quad);
+        // glPopMatrix();
+
+
+        // glPushMatrix();
+        // glTranslatef(0, .001, -0.5);
+        // glRotatef(180, 0, 0, 1);
+        
+        // writeText(msg, font, CENTER);
+
+        // glPopMatrix();
+
+
+        // glPushMatrix();
+        // glTranslatef(0, -0.501, -0.5);
+        // writeText(msg, font, CENTER);
+        // glPopMatrix();
+
     }
     glPopMatrix();
+    
 }
