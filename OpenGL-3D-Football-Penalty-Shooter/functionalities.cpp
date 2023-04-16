@@ -197,11 +197,13 @@ void initialiseEverything()
     {
         sphere.positionCurrent[i] = sphere.velocityCurrent[i] = 0;
     }
+    sphere.positionCurrent[1] = -10;
     powerMeter = 0.0;
 
     currentMode = ADJUSTING;
 
     sphere.positionInitial.x = sphere.positionCurrent.x = 0.0;
+    sphere.positionInitial.y = -10;
     sphere.velocityCurrent[0] = sphere.velocityInitial[0] = 0;
     sphere.accelerationCurrent[2] = -9.8;
     toLookAt = sphere.positionCurrent;
