@@ -240,8 +240,15 @@ void draw()
     glPopAttrib();
     glPopMatrix();
 
-    if (currentMode == POWERING || currentMode == AIMING)
+    if (currentMode == POWERING || currentMode == AIMING || currentMode == POWERING_ACC)
     {
+        axes st = aimArrow.start;
+        axes en = aimArrow.finish;
+        // for (int i = 0; i < 3; ++i)
+        // {
+        //     cout << st[i] << " " << i << " " << en[i] << endl;
+        // }
+
         aimArrow.drawWithAngles();
     }
     drawChalkLines();
@@ -267,10 +274,10 @@ void draw()
     // initialiseEverything();
     // currentMode = HELP;
     // return;
-    // if (Goals >= 2)
-    // {
-    //     currentMode = HELP;
-    // }
+    if (Goals >= 2)
+    {
+        currentMode = HELP;
+    }
     drawHUD();
 
     glutSwapBuffers();
@@ -369,7 +376,7 @@ void incrementPowerMeter2(int _)
         glutTimerFunc(1000 * 1 / 60.0, incrementPowerMeter2, 0);
     }
 }
-
+bool powering_set = false;
 void handleKeypress(unsigned char key, // The key that was pressed
                     int x, int y)
 { // The current mouse coordinates
@@ -415,9 +422,9 @@ void handleKeypress(unsigned char key, // The key that was pressed
     {
         switch (key)
         {
-        case ' ':
+        case 112:
             currentMode = POWERING_ACC;
-            glutTimerFunc(1000 * 1 / 60.0, incrementPowerMeter2, 0);
+            // glutTimerFunc(1000 * 1 / 60.0, incrementPowerMeter2, 0);
             break;
         case 27: // Escape key
             currentMode = ADJUSTING;
@@ -425,6 +432,21 @@ void handleKeypress(unsigned char key, // The key that was pressed
     }
     if (currentMode == POWERING_ACC)
     {
+        cout << "was here in power ACC key press.\n";
+        switch (key)
+        {
+        case 112:
+            // currentMode = POWERING;
+            glutTimerFunc(1000 * 1 / 60.0, incrementPowerMeter2, 0);
+            break;
+        case 27: // Escape key
+            currentMode = AIMING;
+        }
+    }
+    if (currentMode == POWERING)
+    {
+        powering_set = true;
+        cout << "was here in powering key press.\n";
         switch (key)
         {
         case ' ':
@@ -432,7 +454,7 @@ void handleKeypress(unsigned char key, // The key that was pressed
             glutTimerFunc(1000 * 1 / 60.0, incrementPowerMeter, 0);
             break;
         case 27: // Escape key
-            currentMode = AIMING;
+            currentMode = POWERING_ACC;
         }
     }
     if (key == 97)
@@ -470,14 +492,22 @@ void idle()
 {
     if (!currentlyWaiting)
     {
-        // if (currentMode == POWERING_ACC && !downKeys[' '])
-        // {
-        //     cout << "was here\n";
-        //     sphere.accelerationCurrent.x = -9.8;
-        // }
-        if (currentMode == POWERING && !downKeys[' '])
+        if (currentMode == POWERING_ACC && !downKeys[112])
         {
-            cout << "was here in the powering mode.\n";
+            // cout << "was here in ACC.\n";
+            currentMode = POWERING;
+
+            // glutTimerFunc(1000 * 1 / 60.0, incrementPowerMeter, 0);
+            double powerMeter_half = powerMeter2 - 0.5;
+            cout << "value of powerMeter2: " << powerMeter2 << endl;
+            sphere.accelerationCurrent.x = -20.0 * (powerMeter_half);
+            if (powerMeter2 >= 1.0)
+                powerMeter2 = 1.0;
+            // currentlyWaiting = true;
+        }
+        if (currentMode == POWERING && !downKeys[' '] && powering_set)
+        {
+            // cout << "was here in the powering mode.\n";
             sphere.velocityCurrent[0] = sphere.velocityInitial[0] =
                 cos(DEG2GRAD(aimArrow.zAngle)) * sin(DEG2GRAD(aimArrow.yAngle)) * BALL_MAX_SPEED * powerMeter;
             sphere.velocityCurrent[1] = sphere.velocityInitial[1] =
@@ -488,11 +518,12 @@ void idle()
                 powerMeter = 1.0;
             glutTimerFunc(10, updatePosCallBack, 0);
             currentlyWaiting = true;
+            powering_set = false;
         }
-        if (currentMode == POWERING_ACC && downKeys[27])
+        if (currentMode == POWERING && downKeys[27])
         {
             currentMode = AIMING;
-            powerMeter2 = 0.0;
+            powerMeter = 0.0;
         }
         if (currentMode == SHOOTING)
         {
@@ -512,7 +543,7 @@ void idle()
                     if (scoredGoal)
                     {
                         Goals++;
-                        system("paplay resources/goal.wav&");
+                        // system("paplay resources/goal.wav&");
                     }
 
                     rotateMsg(0);
@@ -521,8 +552,10 @@ void idle()
                 }
             }
         }
-        if (currentMode == POWERING)
+        if (currentMode == POWERING && downKeys[27])
         {
+            currentMode = POWERING_ACC;
+            powerMeter2 = 0.0;
         }
     }
 
