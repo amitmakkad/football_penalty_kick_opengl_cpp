@@ -685,19 +685,27 @@ void updateDefenderPosition(int _) {
     defender.acceleration();
 
     if (currentMode == SHOOTING) {
-//         if (!done) {
-// //            cout<<sphere.velocityCurrent.x<<endl;
-//             if (sphere.velocityCurrent.x < 0) {
-//                 defender.state.velocityCurrent.x = -DEFENDER_SPEED;
-//                 done = 1;
-//             } else if (sphere.velocityCurrent.x > 0) {
-//                 defender.state.velocityCurrent.x = DEFENDER_SPEED;
-//                 done = 1;
-//             } else {
-//                 defender.state.velocityCurrent.x = 0;
-//                 done = 1;
-//             }
-//         }
+        if (!done) {
+//            cout<<sphere.velocityCurrent.x<<endl;
+            if (sphere.velocityCurrent.x < 0) {
+                if(defender.state.velocityCurrent.x >0){
+                    defender.state.velocityCurrent.x =-defender.state.velocityCurrent.x ;
+                }
+                
+                // defender.state.velocityCurrent.x = -DEFENDER_SPEED;
+                done = 1;
+            } else if (sphere.velocityCurrent.x > 0) {
+                // defender.state.velocityCurrent.x = DEFENDER_SPEED;
+                if(defender.state.velocityCurrent.x <0){
+                    defender.state.velocityCurrent.x =-defender.state.velocityCurrent.x ;
+                }
+
+                done = 1;
+            } else {
+                defender.state.velocityCurrent.x = 0;
+                done = 1;
+            }
+        }
 
         
         
