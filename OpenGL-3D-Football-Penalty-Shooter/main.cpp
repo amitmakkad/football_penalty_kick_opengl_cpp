@@ -1,6 +1,3 @@
-//
-// Created by kunal on 3/3/18.
-//
 #include <GL/glut.h>
 #include <bits/stdc++.h>
 #include <GL/gl.h>
