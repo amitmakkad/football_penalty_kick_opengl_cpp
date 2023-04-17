@@ -79,7 +79,8 @@ enum mode
     SHOOTING,
     HELP,
     NONE,
-    POWERING_ACC
+    POWERING_ACC,
+    POWERING_IDLE
 };
 
 void backgroundMusicPlayer(int);

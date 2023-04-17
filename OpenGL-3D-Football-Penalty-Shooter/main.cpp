@@ -424,7 +424,7 @@ void handleKeypress(unsigned char key, // The key that was pressed
         {
         case 112:
             currentMode = POWERING_ACC;
-            // glutTimerFunc(1000 * 1 / 60.0, incrementPowerMeter2, 0);
+            glutTimerFunc(1000 * 1 / 60.0, incrementPowerMeter2, 0);
             break;
         case 27: // Escape key
             currentMode = ADJUSTING;
@@ -436,11 +436,14 @@ void handleKeypress(unsigned char key, // The key that was pressed
         switch (key)
         {
         case 112:
-            // currentMode = POWERING;
-            glutTimerFunc(1000 * 1 / 60.0, incrementPowerMeter2, 0);
+            currentMode = POWERING_ACC;
+            // glutTimerFunc(1000 * 1 / 60.0, incrementPowerMeter, 0);
             break;
         case 27: // Escape key
             currentMode = AIMING;
+            // case ' ':
+            //     currentMode = POWERING;
+            //     glutTimerFunc(1000 * 1 / 60.0, incrementPowerMeter, 0);
         }
     }
     if (currentMode == POWERING)
@@ -451,10 +454,23 @@ void handleKeypress(unsigned char key, // The key that was pressed
         {
         case ' ':
             currentMode = POWERING;
-            glutTimerFunc(1000 * 1 / 60.0, incrementPowerMeter, 0);
+            // glutTimerFunc(1000 * 1 / 60.0, incrementPowerMeter, 0);
             break;
         case 27: // Escape key
             currentMode = POWERING_ACC;
+        }
+    }
+    if (currentMode == POWERING_IDLE)
+    {
+        switch (key)
+        {
+        case ' ':
+            currentMode = POWERING;
+            glutTimerFunc(1000 * 1 / 60.0, incrementPowerMeter, 0);
+            break;
+        case 27:
+            currentMode = POWERING_ACC;
+            break;
         }
     }
     if (key == 97)
@@ -488,32 +504,54 @@ void handleKeypress(unsigned char key, // The key that was pressed
     }
 }
 
+double sq(double x)
+{
+    return x * x;
+}
+
 void idle()
 {
     if (!currentlyWaiting)
     {
         if (currentMode == POWERING_ACC && !downKeys[112])
         {
-            // cout << "was here in ACC.\n";
-            currentMode = POWERING;
+            cout << "was here in P lifting ACC.\n";
+            currentMode = POWERING_IDLE;
+            /// powering_set = true;
+            // if (downKeys[' '])
+            // {
 
-            // glutTimerFunc(1000 * 1 / 60.0, incrementPowerMeter, 0);
+            //     glutTimerFunc(1000 * 1 / 60.0, incrementPowerMeter, 0);
+            // }
             double powerMeter_half = powerMeter2 - 0.5;
             cout << "value of powerMeter2: " << powerMeter2 << endl;
-            sphere.accelerationCurrent.x = -20.0 * (powerMeter_half);
+            // sphere.accelerationCurrent.x = -20.0 * (powerMeter_half);
             if (powerMeter2 >= 1.0)
                 powerMeter2 = 1.0;
             // currentlyWaiting = true;
         }
         if (currentMode == POWERING && !downKeys[' '] && powering_set)
         {
-            // cout << "was here in the powering mode.\n";
+            cout << "was here in space lifting.\n";
             sphere.velocityCurrent[0] = sphere.velocityInitial[0] =
                 cos(DEG2GRAD(aimArrow.zAngle)) * sin(DEG2GRAD(aimArrow.yAngle)) * BALL_MAX_SPEED * powerMeter;
             sphere.velocityCurrent[1] = sphere.velocityInitial[1] =
                 cos(DEG2GRAD(aimArrow.zAngle)) * cos(DEG2GRAD(aimArrow.yAngle)) * BALL_MAX_SPEED * powerMeter;
             sphere.velocityCurrent[2] = sphere.velocityInitial[2] =
                 sin(DEG2GRAD(aimArrow.zAngle)) * BALL_MAX_SPEED * powerMeter + BALL_MIN_SPEED;
+            cout << "Value of the initial velocity is: " << sphere.velocityInitial[0] << " " << sphere.velocityInitial[1] << "\n";
+            // magnus effect x dir acceleration
+            // sqrt(sq(sphere.velocityCurrent[0]) + sq(sphere.velocityCurrent[1]))
+            double sgn1 = 1, sgn2 = 1;
+            if (sphere.velocityInitial[0] <= 0)
+            {
+                sgn1 = -0.5;
+                sgn2 = -0.5;
+            }
+            sphere.accelerationCurrent.x = -0.06 * sphere.velocityCurrent[0] - 1.4 * sgn1 * powerMeter2 * sphere.velocityCurrent[1];
+            // magnus effect y dir acceleration
+            // sqrt(sq(sphere.velocityCurrent[0]) + sq(sphere.velocityCurrent[1]))
+            sphere.accelerationCurrent.y = -0.06 * sphere.velocityCurrent[1] + 1.4 * sgn2 * powerMeter2 * sphere.velocityCurrent[0];
             if (powerMeter >= 1.0)
                 powerMeter = 1.0;
             glutTimerFunc(10, updatePosCallBack, 0);
