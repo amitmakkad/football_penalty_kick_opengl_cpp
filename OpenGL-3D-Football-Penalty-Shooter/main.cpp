@@ -394,18 +394,137 @@ void incrementPowerMeter2(int _)
     }
 }
 bool powering_set = false;
+// void handleKeypress(unsigned char key, // The key that was pressed
+//                     int x, int y)
+// { // The current mouse coordinates
+    
+//     if (currentMode != HELP)
+//     {
+//         switch (key)
+//         {
+//         case '+':
+//             sphereCamera.distance -= 0.1f;
+//             sphereCamera.distance += (sphereCamera.distance < MIN_SPHERE_CAMERA_DISTANCE ? 0.1f : 0);
+//             //            cout<<sphereCamera.distance<<endl;
+//         }
+//     if(currentMode==CHOOSE){
+//         if(key=='1'){
+//             currentLevel=HUMAN;
+//             cout<<"human"<<endl;
+//         }
+//         else if(key=='2'){
+//             currentLevel=EASY;
+
+
+//           defender.state.velocityInitial[0] = defender.state.velocityCurrent[0] = DEFENDER_SPEED_EASY;
+//         defender.state.velocityInitial[2]=defender.state.velocityCurrent[2]=DEFENDER_SPEED_VERTICAL;
+//         defender.state.velocityInitial.x = defender.state.velocityCurrent.x = DEFENDER_SPEED_EASY;
+//         defender.state.velocityInitial.z=defender.state.velocityCurrent.z=DEFENDER_SPEED_VERTICAL;
+//         // defender.state.accelerationCurrent[2] = -9.8;
+//             cout<<"easy"<<endl;
+//         }
+//         else if(key=='3'){
+//             currentLevel=MEDIUM;
+//             defender.state.velocityInitial[0] = defender.state.velocityCurrent[0] = DEFENDER_SPEED_MEDIUM;
+//         defender.state.velocityInitial[2]=defender.state.velocityCurrent[2]=DEFENDER_SPEED_VERTICAL;
+//         defender.state.velocityInitial.x = defender.state.velocityCurrent.x = DEFENDER_SPEED_MEDIUM;
+//         defender.state.velocityInitial.z=defender.state.velocityCurrent.z=DEFENDER_SPEED_VERTICAL;
+//         // defender.state.accelerationCurrent[2] = -19.8;
+//         }
+//         else if(key=='4'){
+//             currentLevel=HARD;
+//             defender.state.velocityInitial[0] = defender.state.velocityCurrent[0] = DEFENDER_SPEED_HARD;
+//         defender.state.velocityInitial[2]=defender.state.velocityCurrent[2]=DEFENDER_SPEED_VERTICAL;
+//         defender.state.velocityInitial.x = defender.state.velocityCurrent.x = DEFENDER_SPEED_HARD;
+//         defender.state.velocityInitial.z=defender.state.velocityCurrent.z=DEFENDER_SPEED_VERTICAL;
+//         // defender.state.accelerationCurrent[2] = -29.8;
+//         }
+//         currentMode=ADJUSTING;
+        
+//     }
+//     }
+    
+
+//     if (currentMode != HELP) {
+//         switch (key) {
+//             case '+':
+//                 sphereCamera.distance -= 0.1f;
+//                 sphereCamera.distance += (sphereCamera.distance < MIN_SPHERE_CAMERA_DISTANCE ? 0.1f : 0);
+// //            cout<<sphereCamera.distance<<endl;
+
+//                 break;
+//             case '-':
+//                 sphereCamera.distance += 0.1f;
+//                 sphereCamera.distance -= (sphereCamera.distance > MAX_SPHERE_CAMERA_DISTANCE ? 0.1f : 0);
+// //            cout<<sphereCamera.distance<<endl;
+//                 break;
+//         }
+//     } 
+//     else {
+//         if (key == 27){
+//             currentMode = CHOOSE;
+//         } 
+        
+//     }
+
+//     downKeys[key] = true;
+//     if (currentMode == ADJUSTING)
+//     {
+//         switch (key)
+//         {
+//         case '\r':
+//             currentMode = AIMING;
+//             break;
+//         case EXIT_KEY: // Escape key
+//             exit(0);   // Exit the program
+//         }
+//     }
+//     if (currentMode == AIMING)
+//     {
+//         switch (key)
+//         {
+//         case 112:
+//             currentMode = POWERING_ACC;
+//             glutTimerFunc(1000 * 1 / 60.0, incrementPowerMeter2, 0);
+//             break;
+//         case 27: // Escape key
+//             currentMode = ADJUSTING;
+//         }
+//     }
+//     if(currentLevel==HUMAN){
+//         if(key==97){
+//             //left
+        
+//             defender.state.velocityInitial.x = -DEFENDER_SPEED;
+//             defender.state.velocityCurrent.x = -DEFENDER_SPEED;
+//             defender.state.accelerationCurrent[0] = 10;
+//         }
+//         if(key==100){
+//             //right
+//             defender.state.velocityInitial.x = DEFENDER_SPEED;
+//             defender.state.velocityCurrent.x = DEFENDER_SPEED;
+//             defender.state.accelerationCurrent[0] = -10;
+//         }
+//         if(key==119){
+//             //up
+//             if(defender.state.positionCurrent[2]==0){
+//                 defender.state.velocityInitial[2]=DEFENDER_SPEED_VERTICAL;
+//                 defender.state.velocityCurrent[2]=DEFENDER_SPEED_VERTICAL;
+//                 defender.state.accelerationCurrent[2] = -9.8;
+//             }
+        
+//         }
+//     }
+    
+
+    
+
+// }
+
+
 void handleKeypress(unsigned char key, // The key that was pressed
                     int x, int y)
 { // The current mouse coordinates
-
-    if (currentMode != HELP)
-    {
-        switch (key)
-        {
-        case '+':
-            sphereCamera.distance -= 0.1f;
-            sphereCamera.distance += (sphereCamera.distance < MIN_SPHERE_CAMERA_DISTANCE ? 0.1f : 0);
-            //            cout<<sphereCamera.distance<<endl;
 
     if(currentMode==CHOOSE){
         if(key=='1'){
@@ -442,28 +561,30 @@ void handleKeypress(unsigned char key, // The key that was pressed
         currentMode=ADJUSTING;
         
     }
-    
 
-    if (currentMode != HELP) {
-        switch (key) {
-            case '+':
-                sphereCamera.distance -= 0.1f;
-                sphereCamera.distance += (sphereCamera.distance < MIN_SPHERE_CAMERA_DISTANCE ? 0.1f : 0);
-//            cout<<sphereCamera.distance<<endl;
+    if (currentMode != HELP)
+    {
+        switch (key)
+        {
+        case '+':
+            sphereCamera.distance -= 0.1f;
+            sphereCamera.distance += (sphereCamera.distance < MIN_SPHERE_CAMERA_DISTANCE ? 0.1f : 0);
+            //            cout<<sphereCamera.distance<<endl;
 
-                break;
-            case '-':
-                sphereCamera.distance += 0.1f;
-                sphereCamera.distance -= (sphereCamera.distance > MAX_SPHERE_CAMERA_DISTANCE ? 0.1f : 0);
-//            cout<<sphereCamera.distance<<endl;
-                break;
+            break;
+        case '-':
+            sphereCamera.distance += 0.1f;
+            sphereCamera.distance -= (sphereCamera.distance > MAX_SPHERE_CAMERA_DISTANCE ? 0.1f : 0);
+            //            cout<<sphereCamera.distance<<endl;
+            break;
         }
-    } 
-    else {
-        if (key == 27){
+    }
+    else
+    {
+        if (key == 27)
+        {
             currentMode = CHOOSE;
-        } 
-        
+        }
     }
 
     downKeys[key] = true;
@@ -490,34 +611,78 @@ void handleKeypress(unsigned char key, // The key that was pressed
             currentMode = ADJUSTING;
         }
     }
-    if(currentLevel==HUMAN){
-        if(key==97){
-            //left
-        
-            defender.state.velocityInitial.x = -DEFENDER_SPEED;
-            defender.state.velocityCurrent.x = -DEFENDER_SPEED;
-            defender.state.accelerationCurrent[0] = 10;
-        }
-        if(key==100){
-            //right
-            defender.state.velocityInitial.x = DEFENDER_SPEED;
-            defender.state.velocityCurrent.x = DEFENDER_SPEED;
-            defender.state.accelerationCurrent[0] = -10;
-        }
-        if(key==119){
-            //up
-            if(defender.state.positionCurrent[2]==0){
-                defender.state.velocityInitial[2]=DEFENDER_SPEED_VERTICAL;
-                defender.state.velocityCurrent[2]=DEFENDER_SPEED_VERTICAL;
-                defender.state.accelerationCurrent[2] = -9.8;
-            }
-        
+    if (currentMode == POWERING_ACC)
+    {
+        cout << "was here in power ACC key press.\n";
+        switch (key)
+        {
+        case 112:
+            currentMode = POWERING_ACC;
+            // glutTimerFunc(1000 * 1 / 60.0, incrementPowerMeter, 0);
+            break;
+        case 27: // Escape key
+            currentMode = AIMING;
+            // case ' ':
+            //     currentMode = POWERING;
+            //     glutTimerFunc(1000 * 1 / 60.0, incrementPowerMeter, 0);
         }
     }
-    
+    if (currentMode == POWERING)
+    {
+        powering_set = true;
+        cout << "was here in powering key press.\n";
+        switch (key)
+        {
+        case ' ':
+            currentMode = POWERING;
+            // glutTimerFunc(1000 * 1 / 60.0, incrementPowerMeter, 0);
+            break;
+        case 27: // Escape key
+            currentMode = POWERING_ACC;
+        }
+    }
+    if (currentMode == POWERING_IDLE)
+    {
+        switch (key)
+        {
+        case ' ':
+            currentMode = POWERING;
+            glutTimerFunc(1000 * 1 / 60.0, incrementPowerMeter, 0);
+            break;
+        case 27:
+            currentMode = POWERING_ACC;
+            break;
+        }
+    }
+    if (key == 97)
+    {
+        // left
 
-    
+        defender.state.velocityInitial.x = -DEFENDER_SPEED;
+        defender.state.velocityCurrent.x = -DEFENDER_SPEED;
 
+        defender.state.accelerationCurrent[0] = 10;
+    }
+    if (key == 100)
+    {
+        // right
+        defender.state.velocityInitial.x = DEFENDER_SPEED;
+        defender.state.velocityCurrent.x = DEFENDER_SPEED;
+        defender.state.accelerationCurrent[0] = -10;
+    }
+    if (key == 119)
+    {
+        // up
+        if (defender.state.positionCurrent[2] == 0)
+        {
+            //              defender.state.velocityInitial.y = DEFENDER_SPEED_VERTICAL;
+            // defender.state.velocityCurrent.y = DEFENDER_SPEED_VERTICAL;
+
+            defender.state.velocityInitial[2] = DEFENDER_SPEED_VERTICAL;
+            defender.state.velocityCurrent[2] = DEFENDER_SPEED_VERTICAL;
+            defender.state.accelerationCurrent[2] = -9.8;
+        }
+    }
 }
 
 double sq(double x)
