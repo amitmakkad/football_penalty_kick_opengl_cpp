@@ -153,6 +153,7 @@ void updatePos(PhysicalState &p, double t)
     {
         p.velocityCurrent.x = -p.velocityCurrent.x;
     }
+    // the moving goal posts
 }
 
 void renderBitmapString(
@@ -274,10 +275,7 @@ void draw()
     // initialiseEverything();
     // currentMode = HELP;
     // return;
-    if (Goals >= 2)
-    {
-        currentMode = HELP;
-    }
+
     drawHUD();
 
     glutSwapBuffers();
