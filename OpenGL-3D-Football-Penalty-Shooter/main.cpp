@@ -27,7 +27,7 @@ void updatePos(PhysicalState &p, double t)
     { // Collision with Pole0
         if (p.positionCurrent.z < POLE_HEIGHT && p.positionCurrent.z > 0.0)
         {
-            axes t = {-POLE_LENGTH / 2, GOAL_POST_Y, p.positionCurrent.z};
+            axes t = {-POLE_LENGTH / 2 + poles[0].state.positionCurrent[0], GOAL_POST_Y, p.positionCurrent.z};
             if ((distanceBW(t, p.positionCurrent) <= BALL_RADIUS + POLE_RADIUS) && !poleCollided[0])
             {
                 poleCollided[0] = true;
@@ -54,7 +54,7 @@ void updatePos(PhysicalState &p, double t)
     { // Collision with Pole2
         if (p.positionCurrent.z < POLE_HEIGHT && p.positionCurrent.z > 0.0)
         {
-            axes t = {POLE_LENGTH / 2, GOAL_POST_Y, p.positionCurrent.z};
+            axes t = {POLE_LENGTH / 2 + poles[2].state.positionCurrent[0], GOAL_POST_Y, p.positionCurrent.z};
             if ((distanceBW(t, p.positionCurrent) <= BALL_RADIUS + POLE_RADIUS) && !poleCollided[2])
             {
                 poleCollided[2] = true;
@@ -79,10 +79,10 @@ void updatePos(PhysicalState &p, double t)
         }
     }
     { // Collision with Pole1
-        if (p.positionCurrent.x < POLE_LENGTH / 2 + POLE_RADIUS &&
-            p.positionCurrent.x > -POLE_LENGTH / 2 - POLE_RADIUS)
+        if (p.positionCurrent.x < poles[1].state.positionCurrent[0] + POLE_LENGTH / 2 + POLE_RADIUS &&
+            p.positionCurrent.x > poles[1].state.positionCurrent[0] - POLE_LENGTH / 2 - POLE_RADIUS)
         {
-            axes t = {p.positionCurrent.x, GOAL_POST_Y, POLE_RADIUS + POLE_HEIGHT};
+            axes t = {p.positionCurrent.x + poles[1].state.positionCurrent[0], GOAL_POST_Y, POLE_RADIUS + POLE_HEIGHT};
             if ((distanceBW(t, p.positionCurrent) <= BALL_RADIUS + POLE_RADIUS) && !poleCollided[1])
             {
                 poleCollided[1] = true;
@@ -154,6 +154,8 @@ void updatePos(PhysicalState &p, double t)
         p.velocityCurrent.x = -p.velocityCurrent.x;
     }
     // the moving goal posts
+    {
+    }
 }
 
 void renderBitmapString(
@@ -271,7 +273,7 @@ void draw()
 
     showMsg();
 
-    //    loadTextureFile("");
+    // loadTextureFile("");
     // initialiseEverything();
     // currentMode = HELP;
     // return;
@@ -478,14 +480,14 @@ void handleKeypress(unsigned char key, // The key that was pressed
         defender.state.velocityInitial.x = -DEFENDER_SPEED;
         defender.state.velocityCurrent.x = -DEFENDER_SPEED;
 
-        defender.state.accelerationCurrent[0] = 10;
+        // defender.state.accelerationCurrent[0] = 10;
     }
     if (key == 100)
     {
         // right
         defender.state.velocityInitial.x = DEFENDER_SPEED;
         defender.state.velocityCurrent.x = DEFENDER_SPEED;
-        defender.state.accelerationCurrent[0] = -10;
+        // defender.state.accelerationCurrent[0] = -10;
     }
     if (key == 119)
     {
@@ -730,6 +732,7 @@ void myInit(void)
     glShadeModel(GL_SMOOTH);
     backgroundMusicPlayer(0);
     updateDefenderPosition(0);
+    updateGoalPostPosition(0);
     glutSetCursor(GLUT_CURSOR_NONE);
     glEnable(GL_MULTISAMPLE);
 }

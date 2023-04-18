@@ -89,8 +89,8 @@ ostream &operator<<(ostream &out, PhysicalState &p)
 
 bool isItGoal(PhysicalState ball)
 {
-    if ((ball.positionCurrent.x <= -POLE_RADIUS + POLE_LENGTH / 2) &&
-        (ball.positionCurrent.x >= +POLE_RADIUS - POLE_LENGTH / 2) &&
+    if ((ball.positionCurrent.x <= poles[2].state.positionCurrent[0] - POLE_RADIUS + POLE_LENGTH / 2) &&
+        (ball.positionCurrent.x >= poles[0].state.positionCurrent[1] + POLE_RADIUS - POLE_LENGTH / 2) &&
         (ball.positionCurrent.z <= POLE_HEIGHT) && (ball.positionCurrent.y > GOAL_POST_Y))
         return true;
     else
@@ -149,6 +149,13 @@ void initialiseEverything()
     poles[2].Type = R_POLE;
     poles[2].height = POLE_HEIGHT;
 
+    /////
+
+    poles[0].state.velocityCurrent[0] = 5;
+    poles[1].state.velocityCurrent[0] = 5;
+    poles[2].state.velocityCurrent[0] = 5;
+    /////
+
     temp = {0, 0, 0};
     aimArrow.start = temp;
     temp = {0, 2, 0};
@@ -172,17 +179,24 @@ void initialiseEverything()
 
     defender.width = DEFENDER_WIDTH;
     defender.height = 2.3;
+    // defender.state.commVelocity[0] = 8;
+    // defender.state.commVelocity[1] = 0;
+    // defender.state.commVelocity[2] = 0;
 
-    defender.state.velocityInitial.x = 0; // DEFENDER_SPEED;
-    defender.state.velocityCurrent.x = 0; // DEFENDER_SPEED;
-    defender.state.velocityInitial.y = 0; // DEFENDER_SPEED_VERTICAL;
-    defender.state.velocityCurrent.y = 0; // DEFENDER_SPEED_VERTICAL;
+    defender.state.velocityInitial.x = 10; // DEFENDER_SPEED;
+    defender.state.velocityCurrent.x = 10; // DEFENDER_SPEED;
+    defender.state.velocityInitial.y = 0;  // DEFENDER_SPEED_VERTICAL;
+    defender.state.velocityCurrent.y = 0;  // DEFENDER_SPEED_VERTICAL;
 
     defender.state.velocityInitial[2] = 0; // DEFENDER_SPEED_VERTICAL;
     defender.state.velocityCurrent[2] = 0; // DEFENDER_SPEED_VERTICAL;
     defender.state.velocityInitial[1] = 0; // DEFENDER_SPEED_VERTICAL;
     defender.state.velocityCurrent[1] = 0; // DEFENDER_SPEED_VERTICAL;
-    defender.state.positionCurrent.x = 0.0;
+    if (firstTime)
+    {
+
+        defender.state.positionCurrent.x = 0.0;
+    }
     defender.state.positionCurrent.y = 0.0;
     defender.state.positionCurrent.z = 0.0;
     defender.state.accelerationCurrent[2] = 0;
@@ -230,17 +244,17 @@ void drawGoalPost()
 
     {
         glPushMatrix();
-        glTranslated(GOAL_POST_X - POLE_LENGTH / 2 + POLE_RADIUS, GOAL_POST_Y + 0, 0 - BALL_RADIUS);
+        glTranslated(GOAL_POST_X - POLE_LENGTH / 2 + POLE_RADIUS + poles[0].state.positionCurrent[0], GOAL_POST_Y + 0, 0 - BALL_RADIUS);
         poles[0].draw();
         glPopMatrix();
 
         glPushMatrix();
-        glTranslated(GOAL_POST_X + 0, GOAL_POST_Y + 0, POLE_HEIGHT + POLE_RADIUS - BALL_RADIUS);
+        glTranslated(GOAL_POST_X + 0 + poles[1].state.positionCurrent[0], GOAL_POST_Y + 0, POLE_HEIGHT + POLE_RADIUS - BALL_RADIUS);
         poles[1].draw();
         glPopMatrix();
 
         glPushMatrix();
-        glTranslated(GOAL_POST_X + POLE_LENGTH / 2 - POLE_RADIUS, GOAL_POST_Y + 0, 0 - BALL_RADIUS);
+        glTranslated(GOAL_POST_X + POLE_LENGTH / 2 - POLE_RADIUS + poles[2].state.positionCurrent[0], GOAL_POST_Y + 0, 0 - BALL_RADIUS);
         poles[2].draw();
         glPopMatrix();
     }
@@ -453,6 +467,35 @@ Press Q at any time to exit the game.
     }
     glEnable(GL_LIGHTING);
 }
+
+void updateGoalPostPosition(int _)
+{
+
+    poles[0].state.timePassed += 1 / 60.0;
+    poles[1].state.timePassed += 1 / 60.0;
+    poles[2].state.timePassed += 1 / 60.0;
+    double t = 1 / 60.0;
+
+    for (int i = 0; i < 3; ++i)
+    {
+        // defender.state.velocityCurrent[i] += defender.state.commVelocity[i];
+        poles[i].state.positionCurrent[0] +=
+            poles[i].state.velocityCurrent[0] * t;
+    }
+
+    if (GOAL_POST_X + POLE_LENGTH / 2 - POLE_RADIUS + poles[2].state.positionCurrent[0] >= 15 || GOAL_POST_X - POLE_LENGTH / 2 + POLE_RADIUS + poles[0].state.positionCurrent[0] <= -15)
+    {
+        // defender.state.positionCurrent[2] = 0;
+        // defender.state.velocityCurrent[2] = 0;
+        // defender.state.accelerationCurrent[2] = 0;
+        for (int i = 0; i < 3; ++i)
+        {
+            poles[i].state.velocityCurrent[0] *= -1;
+        }
+    }
+    glutTimerFunc(1000 * 1 / 60.0, updateGoalPostPosition, 1 / 60.0);
+}
+
 void updateDefenderPosition(int _)
 {
 
@@ -469,60 +512,67 @@ void updateDefenderPosition(int _)
     double t = 1 / 60.0;
     defender.acceleration();
 
-    if (currentMode == SHOOTING)
+    // if (currentMode == SHOOTING)
+    // {
+    //         if (!done) {
+    // //            cout<<sphere.velocityCurrent.x<<endl;
+    //             if (sphere.velocityCurrent.x < 0) {
+    //                 defender.state.velocityCurrent.x = -DEFENDER_SPEED;
+    //                 done = 1;
+    //             } else if (sphere.velocityCurrent.x > 0) {
+    //                 defender.state.velocityCurrent.x = DEFENDER_SPEED;
+    //                 done = 1;
+    //             } else {
+    //                 defender.state.velocityCurrent.x = 0;
+    //                 done = 1;
+    //             }
+    //         }
+
+    for (int i = 0; i < 3; ++i)
     {
-        //         if (!done) {
-        // //            cout<<sphere.velocityCurrent.x<<endl;
-        //             if (sphere.velocityCurrent.x < 0) {
-        //                 defender.state.velocityCurrent.x = -DEFENDER_SPEED;
-        //                 done = 1;
-        //             } else if (sphere.velocityCurrent.x > 0) {
-        //                 defender.state.velocityCurrent.x = DEFENDER_SPEED;
-        //                 done = 1;
-        //             } else {
-        //                 defender.state.velocityCurrent.x = 0;
-        //                 done = 1;
-        //             }
-        //         }
-
-        for (int i = 0; i < 3; ++i)
-        {
-            defender.state.positionCurrent[i] =
-                defender.state.velocityCurrent[i] * t + 0.5 * defender.state.accelerationCurrent[i] * t * t +
-                defender.state.positionCurrent[i];
-            defender.state.velocityCurrent[i] =
-                defender.state.velocityCurrent[i] + defender.state.accelerationCurrent[i] * t;
-        }
-
-        if (defender.state.positionCurrent[2] <= 0)
-        {
-            defender.state.positionCurrent[2] = 0;
-            defender.state.velocityCurrent[2] = 0;
-            defender.state.accelerationCurrent[2] = 0;
-        }
-        if (defender.state.velocityCurrent[0] < 0 && defender.state.accelerationCurrent[0] < 0)
-        {
-            defender.state.accelerationCurrent[0] = 0;
-            defender.state.velocityCurrent[0] = 0;
-        }
-        if (defender.state.velocityCurrent[0] > 0 && defender.state.accelerationCurrent[0] > 0)
-        {
-            defender.state.accelerationCurrent[0] = 0;
-            defender.state.velocityCurrent[0] = 0;
-        }
-        // if (defender.state.positionCurrent[1] <= 0) {
-        //     defender.state.positionCurrent[1] = 0;
-        //     defender.state.velocityCurrent[1] = 0;
-        //     defender.state.accelerationCurrent[1]=0;
-        // }
-
-        //    if (currentMode != NONE && currentMode != GOAL_ANIMATION){
-        //    }
+        // defender.state.velocityCurrent[i] += defender.state.commVelocity[i];
+        defender.state.positionCurrent[i] =
+            defender.state.velocityCurrent[i] * t + 0.5 * defender.state.accelerationCurrent[i] * t * t +
+            defender.state.positionCurrent[i];
+        defender.state.velocityCurrent[i] =
+            defender.state.velocityCurrent[i] + defender.state.accelerationCurrent[i] * t;
     }
-    else
+
+    if (defender.state.positionCurrent[2] <= 0)
     {
-        done = 0;
-    };
+        defender.state.positionCurrent[2] = 0;
+        defender.state.velocityCurrent[2] = 0;
+        defender.state.accelerationCurrent[2] = 0;
+    }
+    // if (defender.state.velocityCurrent[0] < 0 && defender.state.accelerationCurrent[0] < 0)
+    // {
+    //     defender.state.accelerationCurrent[0] = 0;
+    //     defender.state.velocityCurrent[0] = 0;
+    // }
+    // if (defender.state.velocityCurrent[0] > 0 && defender.state.accelerationCurrent[0] > 0)
+    // {
+    //     defender.state.accelerationCurrent[0] = 0;
+    //     defender.state.velocityCurrent[0] = 0;
+    // }
+    // if (defender.state.positionCurrent[1] <= 0) {
+    //     defender.state.positionCurrent[1] = 0;
+    //     defender.state.velocityCurrent[1] = 0;
+    //     defender.state.accelerationCurrent[1]=0;
+    // }
+    if (defender.state.positionCurrent[0] >= 15 || defender.state.positionCurrent[0] <= -15)
+    {
+        cout << "was here in the updDefPos\n";
+        defender.state.velocityCurrent[0] *= -1;
+        defender.state.accelerationCurrent[0] *= -1;
+    }
+
+    //    if (currentMode != NONE && currentMode != GOAL_ANIMATION){
+    //    }
+    // }
+    // else
+    // {
+    //     done = 0;
+    // };
     glutTimerFunc(1000 * 1 / 60.0, updateDefenderPosition, 1 / 60.0);
 }
 

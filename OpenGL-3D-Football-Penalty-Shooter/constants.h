@@ -15,7 +15,7 @@
 #define BALL_ELASTICITY 0.85
 
 #define POLE_HEIGHT 3 // 2.5
-#define POLE_LENGTH 7
+#define POLE_LENGTH 8
 
 #define GOAL_POST_X 0.0
 #define GOAL_POST_Y 7.0

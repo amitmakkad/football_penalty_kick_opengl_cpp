@@ -35,7 +35,7 @@ struct PhysicalState
     axes positionCurrent;
     axes velocityCurrent;
     axes accelerationCurrent;
-
+    axes commVelocity;
     double elasticity;
     double timePassed;
 
@@ -48,6 +48,7 @@ bool isItGoal(PhysicalState ball);
 int LoadGLTexture(char *filename);
 
 void updateDefenderPosition(int);
+void updateGoalPostPosition(int);
 
 void initialiseEverything();
 
