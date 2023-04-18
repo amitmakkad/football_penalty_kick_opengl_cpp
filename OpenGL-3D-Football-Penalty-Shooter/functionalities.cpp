@@ -393,7 +393,7 @@ Press Q at any time to exit the game.
         glRotatef(90 + sphereCamera.xAngle, 0, 0, 1);
         glRotatef(-sphereCamera.zAngle, 1, 0, 0);
 
-        glTranslatef(0, -BALL_RADIUS, -BALL_RADIUS);
+        glTranslatef(0, -BALL_RADIUS - 5, -BALL_RADIUS);
 
         glColor4f(0, 0, 0, 0.8);
         glBegin(GL_QUADS);
@@ -402,8 +402,8 @@ Press Q at any time to exit the game.
         glVertex3f(20, -8, 6);
         glVertex3f(-20, -8, 6);
         glEnd();
-        glScalef(1, 1, 0.8);
-        glTranslatef(0, -8.5, 4.5);
+        glScalef(1.4, 1.4, 1.8);
+        glTranslatef(0, -13, 1.5);
 
         currentTextColor = {1.0, 1.0, 1.0, 1.0};
         writeMultiLineText(instructions, font, CENTER);
