@@ -89,8 +89,8 @@ ostream &operator<<(ostream &out, PhysicalState &p)
 
 bool isItGoal(PhysicalState ball)
 {
-    if ((ball.positionCurrent.x <= -POLE_RADIUS + POLE_LENGTH / 2) &&
-        (ball.positionCurrent.x >= +POLE_RADIUS - POLE_LENGTH / 2) &&
+    if ((ball.positionCurrent.x <= poles[2].state.positionCurrent[0] - POLE_RADIUS + POLE_LENGTH / 2) &&
+        (ball.positionCurrent.x >= poles[0].state.positionCurrent[1] + POLE_RADIUS - POLE_LENGTH / 2) &&
         (ball.positionCurrent.z <= POLE_HEIGHT) && (ball.positionCurrent.y > GOAL_POST_Y))
         return true;
     else
@@ -148,6 +148,13 @@ void initialiseEverything()
     poles[1].height = POLE_LENGTH / 2;
     poles[2].Type = R_POLE;
     poles[2].height = POLE_HEIGHT;
+
+    /////
+
+    poles[0].state.velocityCurrent[0] = 5;
+    poles[1].state.velocityCurrent[0] = 5;
+    poles[2].state.velocityCurrent[0] = 5;
+    /////
 
     temp = {0, 0, 0};
     aimArrow.start = temp;
@@ -299,17 +306,17 @@ void drawGoalPost()
 
     {
         glPushMatrix();
-        glTranslated(GOAL_POST_X - POLE_LENGTH / 2 + POLE_RADIUS, GOAL_POST_Y + 0, 0 - BALL_RADIUS);
+        glTranslated(GOAL_POST_X - POLE_LENGTH / 2 + POLE_RADIUS + poles[0].state.positionCurrent[0], GOAL_POST_Y + 0, 0 - BALL_RADIUS);
         poles[0].draw();
         glPopMatrix();
 
         glPushMatrix();
-        glTranslated(GOAL_POST_X + 0, GOAL_POST_Y + 0, POLE_HEIGHT + POLE_RADIUS - BALL_RADIUS);
+        glTranslated(GOAL_POST_X + 0 + poles[1].state.positionCurrent[0], GOAL_POST_Y + 0, POLE_HEIGHT + POLE_RADIUS - BALL_RADIUS);
         poles[1].draw();
         glPopMatrix();
 
         glPushMatrix();
-        glTranslated(GOAL_POST_X + POLE_LENGTH / 2 - POLE_RADIUS, GOAL_POST_Y + 0, 0 - BALL_RADIUS);
+        glTranslated(GOAL_POST_X + POLE_LENGTH / 2 - POLE_RADIUS + poles[2].state.positionCurrent[0], GOAL_POST_Y + 0, 0 - BALL_RADIUS);
         poles[2].draw();
         glPopMatrix();
     }
@@ -449,13 +456,13 @@ void drawHUD() {
 
         glColor4f(0, 0, 0, 0.8);
         glBegin(GL_QUADS);
-        glVertex3f(-10, 0, -5);
-        glVertex3f(10, 0, -5);
-        glVertex3f(10, 0, 6);
-        glVertex3f(-10, 0, 6);
+        glVertex3f(-20, -8, -10);
+        glVertex3f(20, -8, -10);
+        glVertex3f(20, -8, 6);
+        glVertex3f(-20, -8, 6);
         glEnd();
-        glScalef(0.5, 0.5, 0.5);
-        glTranslatef(0, -0.001, 9.5);
+        glScalef(1, 1, 0.8);
+        glTranslatef(0, -8.5, 4.5);
 
         currentTextColor = {1.0, 1.0, 1.0, 1.0};
         writeMultiLineText(instructions, font, CENTER);
@@ -558,7 +565,36 @@ void drawHUD() {
 
 
 
-void updateDefenderPosition(int _) {
+void updateGoalPostPosition(int _)
+{
+
+    poles[0].state.timePassed += 1 / 60.0;
+    poles[1].state.timePassed += 1 / 60.0;
+    poles[2].state.timePassed += 1 / 60.0;
+    double t = 1 / 60.0;
+
+    for (int i = 0; i < 3; ++i)
+    {
+        // defender.state.velocityCurrent[i] += defender.state.commVelocity[i];
+        poles[i].state.positionCurrent[0] +=
+            poles[i].state.velocityCurrent[0] * t;
+    }
+
+    if (GOAL_POST_X + POLE_LENGTH / 2 - POLE_RADIUS + poles[2].state.positionCurrent[0] >= 15 || GOAL_POST_X - POLE_LENGTH / 2 + POLE_RADIUS + poles[0].state.positionCurrent[0] <= -15)
+    {
+        // defender.state.positionCurrent[2] = 0;
+        // defender.state.velocityCurrent[2] = 0;
+        // defender.state.accelerationCurrent[2] = 0;
+        for (int i = 0; i < 3; ++i)
+        {
+            poles[i].state.velocityCurrent[0] *= -1;
+        }
+    }
+    glutTimerFunc(1000 * 1 / 60.0, updateGoalPostPosition, 1 / 60.0);
+}
+
+void updateDefenderPosition(int _)
+{
 
     static float increment = 2.0f;
     static int done = 0;
@@ -677,6 +713,67 @@ void updateDefenderPosition(int _) {
     else{
         done=0;
     };
+    // if (currentMode == SHOOTING)
+    // {
+    //         if (!done) {
+    // //            cout<<sphere.velocityCurrent.x<<endl;
+    //             if (sphere.velocityCurrent.x < 0) {
+    //                 defender.state.velocityCurrent.x = -DEFENDER_SPEED;
+    //                 done = 1;
+    //             } else if (sphere.velocityCurrent.x > 0) {
+    //                 defender.state.velocityCurrent.x = DEFENDER_SPEED;
+    //                 done = 1;
+    //             } else {
+    //                 defender.state.velocityCurrent.x = 0;
+    //                 done = 1;
+    //             }
+    //         }
+
+    for (int i = 0; i < 3; ++i)
+    {
+        // defender.state.velocityCurrent[i] += defender.state.commVelocity[i];
+        defender.state.positionCurrent[i] =
+            defender.state.velocityCurrent[i] * t + 0.5 * defender.state.accelerationCurrent[i] * t * t +
+            defender.state.positionCurrent[i];
+        defender.state.velocityCurrent[i] =
+            defender.state.velocityCurrent[i] + defender.state.accelerationCurrent[i] * t;
+    }
+
+    if (defender.state.positionCurrent[2] <= 0)
+    {
+        defender.state.positionCurrent[2] = 0;
+        defender.state.velocityCurrent[2] = 0;
+        defender.state.accelerationCurrent[2] = 0;
+    }
+    // if (defender.state.velocityCurrent[0] < 0 && defender.state.accelerationCurrent[0] < 0)
+    // {
+    //     defender.state.accelerationCurrent[0] = 0;
+    //     defender.state.velocityCurrent[0] = 0;
+    // }
+    // if (defender.state.velocityCurrent[0] > 0 && defender.state.accelerationCurrent[0] > 0)
+    // {
+    //     defender.state.accelerationCurrent[0] = 0;
+    //     defender.state.velocityCurrent[0] = 0;
+    // }
+    // if (defender.state.positionCurrent[1] <= 0) {
+    //     defender.state.positionCurrent[1] = 0;
+    //     defender.state.velocityCurrent[1] = 0;
+    //     defender.state.accelerationCurrent[1]=0;
+    // }
+    if (defender.state.positionCurrent[0] >= 15 || defender.state.positionCurrent[0] <= -15)
+    {
+        cout << "was here in the updDefPos\n";
+        defender.state.velocityCurrent[0] *= -1;
+        defender.state.accelerationCurrent[0] *= -1;
+    }
+
+    //    if (currentMode != NONE && currentMode != GOAL_ANIMATION){
+    //    }
+    // }
+    // else
+    // {
+    //     done = 0;
+    // };
     glutTimerFunc(1000 * 1 / 60.0, updateDefenderPosition, 1 / 60.0);
 }
 

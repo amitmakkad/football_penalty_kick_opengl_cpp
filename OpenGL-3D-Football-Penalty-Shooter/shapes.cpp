@@ -271,13 +271,24 @@ void FlatArrow::drawWithAngles()
     glPopMatrix();
     glPopAttrib();
 }
+// POLE_LENGTH / 2.0 - this->width / 2 - POLE_RADIUS
+// -POLE_LENGTH / 2.0 + this->width / 2 + POLE_RADIUS
 
 void Defender::acceleration()
 {
-    if (this->state.positionCurrent.x >= POLE_LENGTH / 2.0 - this->width / 2 - POLE_RADIUS ||
-        this->state.positionCurrent.x <= -POLE_LENGTH / 2.0 + this->width / 2 + POLE_RADIUS)
+    if (GOAL_POST_X + POLE_LENGTH / 2 - POLE_RADIUS + poles[2].state.positionCurrent[0] - this->state.positionCurrent.x <= 2 ||
+        this->state.positionCurrent.x - (GOAL_POST_X - POLE_LENGTH / 2 + POLE_RADIUS + poles[0].state.positionCurrent[0]) <= 2)
     {
         this->state.velocityCurrent.x *= -1;
+        if (this->state.positionCurrent.x - (GOAL_POST_X - POLE_LENGTH / 2 + POLE_RADIUS + poles[0].state.positionCurrent[0]) <= 2)
+        {
+
+            this->state.positionCurrent[0] += 0.2;
+        }
+        else
+        {
+            this->state.positionCurrent[0] -= 0.2;
+        }
     }
 }
 
