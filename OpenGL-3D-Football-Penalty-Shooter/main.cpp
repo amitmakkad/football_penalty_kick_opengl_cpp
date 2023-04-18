@@ -15,6 +15,7 @@ using namespace std;
 
 bool poleCollided[3];
 bool stopEverything = false;
+int crossed = 0;
 unsigned int Tries, Goals;
 vector<float> currentTextColor = {1, 1, 1, 1};
 

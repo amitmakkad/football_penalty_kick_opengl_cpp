@@ -109,6 +109,8 @@ extern PhysicalState sphere, *determineSphere;
 
 extern bool scoredGoal;
 
+extern int crossed;
+
 extern int goalCount, totalTries;
 
 void drawBitmapText(const char *string, float x, float y);
