@@ -397,13 +397,13 @@ Press Q at any time to exit the game.
 
         glColor4f(0, 0, 0, 0.8);
         glBegin(GL_QUADS);
-        glVertex3f(-10, 0, -5);
-        glVertex3f(10, 0, -5);
-        glVertex3f(10, 0, 6);
-        glVertex3f(-10, 0, 6);
+        glVertex3f(-20, -8, -10);
+        glVertex3f(20, -8, -10);
+        glVertex3f(20, -8, 6);
+        glVertex3f(-20, -8, 6);
         glEnd();
-        glScalef(0.5, 0.5, 0.5);
-        glTranslatef(0, -0.001, 9.5);
+        glScalef(1, 1, 0.8);
+        glTranslatef(0, -8.5, 4.5);
 
         currentTextColor = {1.0, 1.0, 1.0, 1.0};
         writeMultiLineText(instructions, font, CENTER);
