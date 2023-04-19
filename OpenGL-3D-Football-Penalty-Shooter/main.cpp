@@ -15,7 +15,9 @@ using namespace std;
 
 bool poleCollided[3];
 bool stopEverything = false;
-int crossed = 0;
+bool crossed = false;
+bool oncePassed = false;
+// string message = "D-WINS";
 unsigned int Tries, Goals;
 vector<float> currentTextColor = {1, 1, 1, 1};
 
@@ -125,6 +127,25 @@ void updatePos(PhysicalState &p, double t)
                 p.velocityCurrent[i] * t + 0.5 * p.accelerationCurrent[i] * t * t + p.positionCurrent[i];
             p.velocityCurrent[i] = p.velocityCurrent[i] + p.accelerationCurrent[i] * t;
         }
+
+        if ((p.positionCurrent[0] <= poles[2].state.positionCurrent[0] - POLE_RADIUS + POLE_LENGTH / 2) &&
+            (p.positionCurrent[0] >= poles[0].state.positionCurrent[1] + POLE_RADIUS - POLE_LENGTH / 2) &&
+            (p.positionCurrent[2] <= POLE_HEIGHT) && (p.positionCurrent[1] <= GOAL_POST_Y + 0.6 && p.positionCurrent[1] >= GOAL_POST_Y) && !oncePassed)
+        {
+            // cout << "was in crossed\n";
+            crossed = true;
+            oncePassed = true;
+            message = "A-WINS";
+        }
+        if ((p.positionCurrent[1] >= GOAL_POST_Y))
+        {
+            oncePassed = true;
+        }
+
+        // if (p.positionCurrent[1] == GOAL_POST_Y)
+        // {
+        //     crossed = true;
+        // }
         if (p.positionCurrent[2] <= 0)
         {
             p.positionCurrent[2] = 0;
@@ -271,8 +292,13 @@ void draw()
     // else
     // {
     // }
+    // cout << "value of crossed: " << crossed << endl;
+    // if (crossed)
+    // {
 
     showMsg();
+    //     crossed = false;
+    // }
 
     // loadTextureFile("");
     // initialiseEverything();
@@ -433,7 +459,7 @@ void handleKeypress(unsigned char key, // The key that was pressed
     }
     if (currentMode == POWERING_ACC)
     {
-        cout << "was here in power ACC key press.\n";
+        // cout << "was here in power ACC key press.\n";
         switch (key)
         {
         case 112:
@@ -450,7 +476,7 @@ void handleKeypress(unsigned char key, // The key that was pressed
     if (currentMode == POWERING)
     {
         powering_set = true;
-        cout << "was here in powering key press.\n";
+        // cout << "was here in powering key press.\n";
         switch (key)
         {
         case ' ':
@@ -516,7 +542,7 @@ void idle()
     {
         if (currentMode == POWERING_ACC && !downKeys[112])
         {
-            cout << "was here in P lifting ACC.\n";
+            // cout << "was here in P lifting ACC.\n";
             currentMode = POWERING_IDLE;
             /// powering_set = true;
             // if (downKeys[' '])
@@ -525,15 +551,15 @@ void idle()
             //     glutTimerFunc(1000 * 1 / 60.0, incrementPowerMeter, 0);
             // }
             double powerMeter_half = powerMeter2 - 0.5;
-            cout << "value of powerMeter2: " << powerMeter2 << endl;
-            // sphere.accelerationCurrent.x = -20.0 * (powerMeter_half);
+            // cout << "value of powerMeter2: " << powerMeter2 << endl;
+            //  sphere.accelerationCurrent.x = -20.0 * (powerMeter_half);
             if (powerMeter2 >= 1.0)
                 powerMeter2 = 1.0;
             // currentlyWaiting = true;
         }
         if (currentMode == POWERING && !downKeys[' '] && powering_set)
         {
-            cout << "was here in space lifting.\n";
+            // cout << "was here in space lifting.\n";
             sphere.velocityCurrent[0] = sphere.velocityInitial[0] =
                 cos(DEG2GRAD(aimArrow.zAngle)) * sin(DEG2GRAD(aimArrow.yAngle)) * BALL_MAX_SPEED * powerMeter;
             sphere.velocityCurrent[1] = sphere.velocityInitial[1] =
@@ -571,18 +597,24 @@ void idle()
         }
         if (currentMode == SHOOTING)
         {
-            if (sphere.positionCurrent.y > GOAL_POST_Y || sphere.velocityCurrent.y <= 0)
+            if (sphere.positionCurrent[1] > GOAL_POST_Y || sphere.velocityCurrent[1] <= 0)
             {
                 if (!determineSphere && !stopEverything)
                 {
+                    cout << "idle was called\n";
                     determineSphere = new PhysicalState;
                     *determineSphere = sphere;
                     //                    cout << *determineSphere;
                     scoredGoal = isItGoal(*determineSphere);
                     if (scoredGoal)
                     {
+                        message = "A-WINS";
                         Goals++;
                         // system("paplay resources/goal.wav&");
+                    }
+                    else
+                    {
+                        message = "D-WINS";
                     }
 
                     rotateMsg(0);

@@ -9,12 +9,14 @@
 using namespace std;
 
 mode currentMode = ADJUSTING;
+// string message = "D-WINS";
 bool currentlyWaiting;
 bool downKeys[127];
 bool scoredGoal;
 int goalCount, totalTries;
 int mouseX, mouseY;
 bool firstTime = true;
+string message = "D-WINS";
 PhysicalState sphere, *determineSphere = NULL;
 
 void handleResize(int w, int h)
@@ -89,9 +91,9 @@ ostream &operator<<(ostream &out, PhysicalState &p)
 
 bool isItGoal(PhysicalState ball)
 {
-    if ((ball.positionCurrent.x <= poles[2].state.positionCurrent[0] - POLE_RADIUS + POLE_LENGTH / 2) &&
-        (ball.positionCurrent.x >= poles[0].state.positionCurrent[1] + POLE_RADIUS - POLE_LENGTH / 2) &&
-        (ball.positionCurrent.z <= POLE_HEIGHT) && (ball.positionCurrent.y > GOAL_POST_Y))
+    if ((ball.positionCurrent[0] <= poles[2].state.positionCurrent[0] - POLE_RADIUS + POLE_LENGTH / 2) &&
+        (ball.positionCurrent[0] >= poles[0].state.positionCurrent[0] + POLE_RADIUS - POLE_LENGTH / 2) &&
+        (ball.positionCurrent[2] <= POLE_HEIGHT) && (ball.positionCurrent[1] > GOAL_POST_Y))
         return true;
     else
         return false;
@@ -128,6 +130,9 @@ void backgroundMusicPlayer(int _)
 
 void initialiseEverything()
 {
+    oncePassed = false;
+    crossed = false;
+    message = "D-WINS";
     ground.Type = WALL;
     axes temp;
     temp = {-20, -20, -BALL_RADIUS};
@@ -826,21 +831,40 @@ void showMsg()
 
     bool toWrite = true;
 
-    string msg = "D-WINS";
+    // string msg = "D-WINS";
+    // message = "D-WINS";
+    // currentTextColor = {1.0, 0.3, 0.3, 1};
+    // if (determineSphere)
+    // {
+    //     cout << "was in determine sphere\n";
+    //     bool gll_scored = isItGoal(*determineSphere);
+    //     if (gll_scored)
+    //     {
 
-    currentTextColor = {1.0, 0.3, 0.3, 1};
-    if (determineSphere)
+    //         message = "A-WINS";
+    //         currentTextColor = {0.3, 1.0, 0.3, 1};
+    //     }
+    //     // if (crossed)
+    //     // {
+    //     //     message = "A-WINS";
+    //     //     currentTextColor = {0.3, 1.0, 0.3, 1};
+    //     //     cout << "was in msg and A-Won\n";
+    //     //     // crossed = false;
+    //     // }
+    // }
+    if (message == "D-WINS")
     {
-        if (isItGoal(*determineSphere))
-        {
-            msg = "A-WINS";
-            currentTextColor = {0.3, 1.0, 0.3, 1};
-            cout << "was in msg and A-Won\n";
-        }
+        currentTextColor = {1.0, 0.3, 0.3, 1};
+    }
+    else
+    {
+        currentTextColor = {0.3, 1.0, 0.3, 1};
     }
     if (!determineSphere)
     {
-        msg = "";
+        // msg = "";
+        cout << "was in not sphere\n";
+        message = "";
         toWrite = false;
     }
     if (toWrite)
@@ -875,13 +899,15 @@ void showMsg()
         glPushMatrix();
         glTranslatef(0, .001, -0.5);
         glRotatef(180, 0, 0, 1);
-        writeText(msg, font, CENTER);
+        // writeText(msg, font, CENTER);
+        writeText(message, font, CENTER);
 
         glPopMatrix();
 
         glPushMatrix();
         glTranslatef(0, -0.501, -0.5);
-        writeText(msg, font, CENTER);
+        // writeText(msg, font, CENTER);
+        writeText(message, font, CENTER);
         glPopMatrix();
     }
     glPopMatrix();

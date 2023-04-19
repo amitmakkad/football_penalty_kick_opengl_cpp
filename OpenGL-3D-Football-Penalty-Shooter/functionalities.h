@@ -109,7 +109,9 @@ extern PhysicalState sphere, *determineSphere;
 
 extern bool scoredGoal;
 
-extern int crossed;
+extern bool crossed, oncePassed;
+extern string message;
+extern string msg;
 
 extern int goalCount, totalTries;
 
