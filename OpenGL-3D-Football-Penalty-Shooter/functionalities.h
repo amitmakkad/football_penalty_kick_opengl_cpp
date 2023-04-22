@@ -48,6 +48,7 @@ bool isItGoal(PhysicalState ball);
 int LoadGLTexture(char *filename);
 
 void updateDefenderPosition(int);
+void updateGoalPostPosition(int);
 
 void initialiseEverything();
 
@@ -72,17 +73,34 @@ void myShear();
 void drawHUD();
 void draw_options();
 
-enum mode {
-    ADJUSTING, AIMING, POWERING, SHOOTING, HELP, NONE , CHOOSE,POWERING_ACC,POWERING_IDLE
+enum mode
+{
+    ADJUSTING,
+    AIMING,
+    POWERING,
+    SHOOTING,
+    HELP,
+    NONE,
+    CHOOSE,
+    POWERING_ACC,
+    POWERING_IDLE
 };
-enum level {
-    HUMAN, EASY, MEDIUM, HARD, NIL
+enum level
+{
+    HUMAN,
+    EASY,
+    MEDIUM,
+    HARD,
+    MOVE_POST,
+    NIL
 };
 
 void backgroundMusicPlayer(int);
 
 extern double powerMeter;
 extern double powerMeter2;
+extern string message;
+extern bool oncePassed;
 
 void drawPowerMeter();
 

@@ -272,12 +272,41 @@ void FlatArrow::drawWithAngles()
     glPopAttrib();
 }
 
+// void Defender::acceleration()
+// {
+// if (this->state.positionCurrent.x >= POLE_LENGTH / 2.0 - this->width / 2 - POLE_RADIUS ||
+//     this->state.positionCurrent.x <= -POLE_LENGTH / 2.0 + this->width / 2 + POLE_RADIUS)
+// {
+//     this->state.velocityCurrent.x *= -1;
+// }
+// }
 void Defender::acceleration()
 {
-    if (this->state.positionCurrent.x >= POLE_LENGTH / 2.0 - this->width / 2 - POLE_RADIUS ||
-        this->state.positionCurrent.x <= -POLE_LENGTH / 2.0 + this->width / 2 + POLE_RADIUS)
+    if (currentLevel == MOVE_POST)
     {
-        this->state.velocityCurrent.x *= -1;
+
+        if (GOAL_POST_X + POLE_LENGTH / 2 - POLE_RADIUS + poles[2].state.positionCurrent[0] - this->state.positionCurrent.x <= 2 ||
+            this->state.positionCurrent.x - (GOAL_POST_X - POLE_LENGTH / 2 + POLE_RADIUS + poles[0].state.positionCurrent[0]) <= 2)
+        {
+            this->state.velocityCurrent.x *= -1;
+            if (this->state.positionCurrent.x - (GOAL_POST_X - POLE_LENGTH / 2 + POLE_RADIUS + poles[0].state.positionCurrent[0]) <= 2)
+            {
+
+                this->state.positionCurrent[0] += 0.2;
+            }
+            else
+            {
+                this->state.positionCurrent[0] -= 0.2;
+            }
+        }
+    }
+    else
+    {
+        if (this->state.positionCurrent.x >= POLE_LENGTH / 2.0 - this->width / 2 - POLE_RADIUS ||
+            this->state.positionCurrent.x <= -POLE_LENGTH / 2.0 + this->width / 2 + POLE_RADIUS)
+        {
+            this->state.velocityCurrent.x *= -1;
+        }
     }
 }
 
@@ -290,8 +319,8 @@ void Defender::draw()
     //
     //    glColor4fv(color);
 
-    glTranslatef(defender.state.positionCurrent.x, GOAL_POST_Y, (this->height) / 2 - BALL_RADIUS+defender.state.positionCurrent.z);
-//    glRotatef(armRot, 0,1,0);
+    glTranslatef(defender.state.positionCurrent.x, GOAL_POST_Y, (this->height) / 2 - BALL_RADIUS + defender.state.positionCurrent.z);
+    //    glRotatef(armRot, 0,1,0);
 
     glBegin(GL_QUADS);
     glTexCoord2f(0.0, 1);
@@ -316,10 +345,10 @@ void Defender::draw()
 
     float displacex = -0.3;
     float displacey = 0.63;
-    glTranslatef(defender.state.positionCurrent.x, GOAL_POST_Y, (this->height) / 2 - BALL_RADIUS+defender.state.positionCurrent.z);
-    glTranslatef(this->width*displacex/2, 0, this->width*displacey/2);
-    glRotatef(armRot, 0,1,0);
-    glTranslatef(-this->width*displacex/2, 0, -this->width*displacey/2);
+    glTranslatef(defender.state.positionCurrent.x, GOAL_POST_Y, (this->height) / 2 - BALL_RADIUS + defender.state.positionCurrent.z);
+    glTranslatef(this->width * displacex / 2, 0, this->width * displacey / 2);
+    glRotatef(armRot, 0, 1, 0);
+    glTranslatef(-this->width * displacex / 2, 0, -this->width * displacey / 2);
     glBegin(GL_QUADS);
     glTexCoord2f(0.0, 1);
     glVertex3f(-this->width / 2, 0, -this->height * 0.22 / 2);
@@ -335,11 +364,11 @@ void Defender::draw()
 
     start2DTexture(leftArm);
 
-    glTranslatef(defender.state.positionCurrent.x, GOAL_POST_Y, (this->height) / 2 - BALL_RADIUS+defender.state.positionCurrent.z);
-    glScalef(-1,1,1);
-    glTranslatef(this->width*displacex/2, 0, this->width*displacey/2);
-    glRotatef(armRot, 0,1,0);
-    glTranslatef(-this->width*displacex/2, 0, -this->width*displacey/2);
+    glTranslatef(defender.state.positionCurrent.x, GOAL_POST_Y, (this->height) / 2 - BALL_RADIUS + defender.state.positionCurrent.z);
+    glScalef(-1, 1, 1);
+    glTranslatef(this->width * displacex / 2, 0, this->width * displacey / 2);
+    glRotatef(armRot, 0, 1, 0);
+    glTranslatef(-this->width * displacex / 2, 0, -this->width * displacey / 2);
     glBegin(GL_QUADS);
     glTexCoord2f(0.0, 1);
     glVertex3f(-this->width / 2, 0, -this->height * 0.22 / 2);
