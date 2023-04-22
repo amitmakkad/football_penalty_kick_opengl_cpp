@@ -5,22 +5,21 @@
 #ifndef FOOTBALL_PENALTY_SHOOTER_FUNCTIONALITIES_H
 #define FOOTBALL_PENALTY_SHOOTER_FUNCTIONALITIES_H
 
-
 #include <bits/stdc++.h>
 #include <GL/glut.h>
 #include "constants.h"
 using namespace std;
-#define DEG2GRAD(x) ((x) * PI/180.0)
+#define DEG2GRAD(x) ((x)*PI / 180.0)
 
-#define GRAD2DEG(x) ((x) * 180.0/PI)
+#define GRAD2DEG(x) ((x)*180.0 / PI)
 using namespace std;
 
 extern unsigned int Tries, Goals;
 
 void handleResize(int w, int h);
 
-
-struct axes {
+struct axes
+{
     double x, y, z;
 
     double &operator[](int);
@@ -28,7 +27,8 @@ struct axes {
 
 double distanceBW(axes axes1, axes axes2);
 
-struct PhysicalState {
+struct PhysicalState
+{
     axes positionInitial;
     axes velocityInitial;
 
@@ -40,7 +40,7 @@ struct PhysicalState {
     double timePassed;
 
     PhysicalState();
-    friend ostream &operator << (ostream &out, PhysicalState &p);
+    friend ostream &operator<<(ostream &out, PhysicalState &p);
 };
 
 bool isItGoal(PhysicalState ball);
@@ -48,17 +48,18 @@ bool isItGoal(PhysicalState ball);
 int LoadGLTexture(char *filename);
 
 void updateDefenderPosition(int);
+void updateGoalPostPosition(int);
 
 void initialiseEverything();
 
 void initialiseEverythingCallback(int _);
 
-
 void drawGoalPost();
 
 void cameraPosition(axes point, double distance, double xAngle, double zAngle);
 
-struct camera {
+struct camera
+{
     double zAngle, xAngle;
     double distance;
 
@@ -72,27 +73,43 @@ void myShear();
 void drawHUD();
 void draw_options();
 
-enum mode {
-    ADJUSTING, AIMING, POWERING, SHOOTING, HELP, NONE , CHOOSE
+enum mode
+{
+    ADJUSTING,
+    AIMING,
+    POWERING,
+    SHOOTING,
+    HELP,
+    NONE,
+    CHOOSE,
+    POWERING_ACC,
+    POWERING_IDLE
 };
-enum level {
-    HUMAN, EASY, MEDIUM, HARD, NIL
+enum level
+{
+    HUMAN,
+    EASY,
+    MEDIUM,
+    HARD,
+    MOVE_POST,
+    NIL
 };
 
 void backgroundMusicPlayer(int);
 
-
 extern double powerMeter;
+extern double powerMeter2;
+extern string message;
+extern bool oncePassed;
 
 void drawPowerMeter();
 
-int convertToTexture(const char * filename);
-GLuint loadTextureFile(const char * filename);
-GLuint convertAndLoadTexture(const char* filename);
+int convertToTexture(const char *filename);
+GLuint loadTextureFile(const char *filename);
+GLuint convertAndLoadTexture(const char *filename);
 
 void start2DTexture(GLuint texture, bool lightingDisabled = true);
 void end2DTexture(bool lightingDisabled = true);
-
 
 extern mode currentMode;
 extern level currentLevel;
@@ -104,18 +121,20 @@ extern bool downKeys[127];
 
 extern PhysicalState sphere, *determineSphere;
 
-
 extern bool scoredGoal;
 
 extern int prevGoals;
 
-void drawBitmapText(const char *string,float x,float y);
+void drawBitmapText(const char *string, float x, float y);
 
 extern int mouseX, mouseY;
 
 extern bool firstTime;
-enum alignment {
-    LEFT, RIGHT, CENTER
+enum alignment
+{
+    LEFT,
+    RIGHT,
+    CENTER
 };
 extern GLuint groundTexture, defenderTexture, leftArm, rightArm, font, ads;
 extern vector<float> currentTextColor;
@@ -129,4 +148,4 @@ void resultMsg();
 void rotateMsg(int _);
 
 extern axes toLookAt;
-#endif //FOOTBALL_PENALTY_SHOOTER_FUNCTIONALITIES_H
+#endif // FOOTBALL_PENALTY_SHOOTER_FUNCTIONALITIES_H

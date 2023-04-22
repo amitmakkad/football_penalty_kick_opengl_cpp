@@ -6,8 +6,8 @@
 #define FOOTBALL_PENALTY_SHOOTER_SHAPES_H
 #include "functionalities.h"
 
-//void drawField() {
-//    glPushAttrib(GL_CURRENT_BIT);
+// void drawField() {
+//     glPushAttrib(GL_CURRENT_BIT);
 ////    glPushAttrib(GL_TEXTURE);
 //    glBegin(GL_QUADS);
 //    glColor3f(1/255.0, 142/255.0, 14/255.0);
@@ -23,31 +23,41 @@
 //    glEnd();
 //    glPopAttrib();
 //}
-enum objectType{WALL, R_POLE, L_POLE, U_POLE};
+enum objectType
+{
+    WALL,
+    R_POLE,
+    L_POLE,
+    U_POLE
+};
 
-class RealObject{
+class RealObject
+{
 public:
     GLfloat color[4];
     objectType Type;
 };
 
-
-class FlatSurface: public RealObject{
+class FlatSurface : public RealObject
+{
 public:
     axes corners[4];
     void draw();
 };
 
-class PoleSurface: public RealObject{
+class PoleSurface : public RealObject
+{
 public:
     PoleSurface();
     axes base;
     double radius;
     double height;
+    PhysicalState state;
     void draw();
 };
 
-class FlatArrow{
+class FlatArrow
+{
 public:
     double width;
     axes start;
@@ -60,7 +70,8 @@ public:
     void drawWithAngles();
 };
 
-class Defender{
+class Defender
+{
 public:
     double width;
     double height;
@@ -74,12 +85,10 @@ public:
 
 extern FlatArrow aimArrow;
 
-
 extern FlatSurface ground;
 
 extern PoleSurface poles[3];
 extern RealObject allObjects[];
 extern Defender defender;
 
-#endif //FOOTBALL_PENALTY_SHOOTER_SHAPES_H
-
+#endif // FOOTBALL_PENALTY_SHOOTER_SHAPES_H
