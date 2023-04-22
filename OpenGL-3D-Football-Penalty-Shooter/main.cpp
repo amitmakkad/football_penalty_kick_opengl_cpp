@@ -14,93 +14,188 @@ bool poleCollided[3];
 bool stopEverything = false;
 unsigned int Tries, Goals;
 int prevGoals;
+string message = "MISS!";
+bool oncePassed = false;
 vector<float> currentTextColor = {1, 1, 1, 1};
 
 void showScore();
 
 void updatePos(PhysicalState &p, double t)
 {
+    cout << "control in upatePos()\n";
     p.timePassed += t;
 
     { // Collision with Pole0
         if (p.positionCurrent.z < POLE_HEIGHT && p.positionCurrent.z > 0.0)
         {
-            axes t = {-POLE_LENGTH / 2 + poles[0].state.positionCurrent[0], GOAL_POST_Y, p.positionCurrent.z};
-            if ((distanceBW(t, p.positionCurrent) <= BALL_RADIUS + POLE_RADIUS) && !poleCollided[0])
+            if (currentLevel == MOVE_POST)
             {
-                poleCollided[0] = true;
-                double alpha, beta, theta;
-                beta = atan(p.velocityCurrent.y / p.velocityCurrent.x);
-                axes vec;
-                for (int i = 0; i < 3; ++i)
+                axes t = {-POLE_LENGTH / 2 + poles[0].state.positionCurrent[0], GOAL_POST_Y, p.positionCurrent.z};
+                if ((distanceBW(t, p.positionCurrent) <= BALL_RADIUS + POLE_RADIUS) && !poleCollided[0])
                 {
-                    vec[i] = t[i] - p.positionCurrent[i];
+                    poleCollided[0] = true;
+                    double alpha, beta, theta;
+                    beta = atan(p.velocityCurrent.y / p.velocityCurrent.x);
+                    axes vec;
+                    for (int i = 0; i < 3; ++i)
+                    {
+                        vec[i] = t[i] - p.positionCurrent[i];
+                    }
+                    alpha = atan(vec.y / vec.x);
+                    theta = PI / 2.0 - beta + 2 * alpha;
+                    double v = p.velocityCurrent.x * p.velocityCurrent.x + p.velocityCurrent.y * p.velocityCurrent.y;
+                    v = sqrt(v);
+                    p.velocityCurrent.y = -v * cos(theta) * p.elasticity;
+                    p.velocityCurrent.x = v * sin(theta) * p.elasticity;
                 }
-                alpha = atan(vec.y / vec.x);
-                theta = PI / 2.0 - beta + 2 * alpha;
-                double v = p.velocityCurrent.x * p.velocityCurrent.x + p.velocityCurrent.y * p.velocityCurrent.y;
-                v = sqrt(v);
-                p.velocityCurrent.y = -v * cos(theta) * p.elasticity;
-                p.velocityCurrent.x = v * sin(theta) * p.elasticity;
+                else if ((distanceBW(t, p.positionCurrent) <= BALL_RADIUS + POLE_RADIUS) && poleCollided[0])
+                {
+                    poleCollided[0] = false;
+                }
             }
-            else if ((distanceBW(t, p.positionCurrent) <= BALL_RADIUS + POLE_RADIUS) && poleCollided[0])
+            else
             {
-                poleCollided[0] = false;
+
+                axes t = {-POLE_LENGTH / 2, GOAL_POST_Y, p.positionCurrent.z};
+                if ((distanceBW(t, p.positionCurrent) <= BALL_RADIUS + POLE_RADIUS) && !poleCollided[0])
+                {
+                    poleCollided[0] = true;
+                    double alpha, beta, theta;
+                    beta = atan(p.velocityCurrent.y / p.velocityCurrent.x);
+                    axes vec;
+                    for (int i = 0; i < 3; ++i)
+                    {
+                        vec[i] = t[i] - p.positionCurrent[i];
+                    }
+                    alpha = atan(vec.y / vec.x);
+                    theta = PI / 2.0 - beta + 2 * alpha;
+                    double v = p.velocityCurrent.x * p.velocityCurrent.x + p.velocityCurrent.y * p.velocityCurrent.y;
+                    v = sqrt(v);
+                    p.velocityCurrent.y = -v * cos(theta) * p.elasticity;
+                    p.velocityCurrent.x = v * sin(theta) * p.elasticity;
+                }
+                else if ((distanceBW(t, p.positionCurrent) <= BALL_RADIUS + POLE_RADIUS) && poleCollided[0])
+                {
+                    poleCollided[0] = false;
+                }
             }
         }
     }
     { // Collision with Pole2
         if (p.positionCurrent.z < POLE_HEIGHT && p.positionCurrent.z > 0.0)
         {
-            axes t = {POLE_LENGTH / 2 + poles[2].state.positionCurrent[0], GOAL_POST_Y, p.positionCurrent.z};
-            if ((distanceBW(t, p.positionCurrent) <= BALL_RADIUS + POLE_RADIUS) && !poleCollided[2])
+            if (currentLevel == MOVE_POST)
             {
-                poleCollided[2] = true;
-                double alpha, beta, theta;
-                beta = atan(p.velocityCurrent.y / p.velocityCurrent.x);
-                axes vec;
-                for (int i = 0; i < 3; ++i)
+
+                axes t = {POLE_LENGTH / 2 + poles[2].state.positionCurrent[0], GOAL_POST_Y, p.positionCurrent.z};
+                if ((distanceBW(t, p.positionCurrent) <= BALL_RADIUS + POLE_RADIUS) && !poleCollided[2])
                 {
-                    vec[i] = t[i] - p.positionCurrent[i];
+                    poleCollided[2] = true;
+                    double alpha, beta, theta;
+                    beta = atan(p.velocityCurrent.y / p.velocityCurrent.x);
+                    axes vec;
+                    for (int i = 0; i < 3; ++i)
+                    {
+                        vec[i] = t[i] - p.positionCurrent[i];
+                    }
+                    alpha = atan(vec.y / vec.x);
+                    theta = PI / 2.0 - beta + 2 * alpha;
+                    double v = p.velocityCurrent.x * p.velocityCurrent.x + p.velocityCurrent.y * p.velocityCurrent.y;
+                    v = sqrt(v);
+                    p.velocityCurrent.y = v * cos(theta) * p.elasticity;
+                    p.velocityCurrent.x = -v * sin(theta) * p.elasticity;
                 }
-                alpha = atan(vec.y / vec.x);
-                theta = PI / 2.0 - beta + 2 * alpha;
-                double v = p.velocityCurrent.x * p.velocityCurrent.x + p.velocityCurrent.y * p.velocityCurrent.y;
-                v = sqrt(v);
-                p.velocityCurrent.y = v * cos(theta) * p.elasticity;
-                p.velocityCurrent.x = -v * sin(theta) * p.elasticity;
+                else if ((distanceBW(t, p.positionCurrent) <= BALL_RADIUS + POLE_RADIUS) && poleCollided[2])
+                {
+                    poleCollided[2] = false;
+                }
             }
-            else if ((distanceBW(t, p.positionCurrent) <= BALL_RADIUS + POLE_RADIUS) && poleCollided[2])
+            else
             {
-                poleCollided[2] = false;
+
+                axes t = {POLE_LENGTH / 2, GOAL_POST_Y, p.positionCurrent.z};
+                if ((distanceBW(t, p.positionCurrent) <= BALL_RADIUS + POLE_RADIUS) && !poleCollided[2])
+                {
+                    poleCollided[2] = true;
+                    double alpha, beta, theta;
+                    beta = atan(p.velocityCurrent.y / p.velocityCurrent.x);
+                    axes vec;
+                    for (int i = 0; i < 3; ++i)
+                    {
+                        vec[i] = t[i] - p.positionCurrent[i];
+                    }
+                    alpha = atan(vec.y / vec.x);
+                    theta = PI / 2.0 - beta + 2 * alpha;
+                    double v = p.velocityCurrent.x * p.velocityCurrent.x + p.velocityCurrent.y * p.velocityCurrent.y;
+                    v = sqrt(v);
+                    p.velocityCurrent.y = v * cos(theta) * p.elasticity;
+                    p.velocityCurrent.x = -v * sin(theta) * p.elasticity;
+                }
+                else if ((distanceBW(t, p.positionCurrent) <= BALL_RADIUS + POLE_RADIUS) && poleCollided[2])
+                {
+                    poleCollided[2] = false;
+                }
             }
         }
     }
     { // Collision with Pole1
-        if (p.positionCurrent.x < poles[1].state.positionCurrent[0] + POLE_LENGTH / 2 + POLE_RADIUS &&
-            p.positionCurrent.x > poles[1].state.positionCurrent[0] - POLE_LENGTH / 2 - POLE_RADIUS)
+        if (currentLevel != MOVE_POST)
         {
-            axes t = {p.positionCurrent.x + poles[1].state.positionCurrent[0], GOAL_POST_Y, POLE_RADIUS + POLE_HEIGHT};
-            if ((distanceBW(t, p.positionCurrent) <= BALL_RADIUS + POLE_RADIUS) && !poleCollided[1])
+
+            if (p.positionCurrent.x < POLE_LENGTH / 2 + POLE_RADIUS &&
+                p.positionCurrent.x > -POLE_LENGTH / 2 - POLE_RADIUS)
             {
-                poleCollided[1] = true;
-                double alpha, beta, theta;
-                beta = atan(p.velocityCurrent.y / p.velocityCurrent.z);
-                axes vec;
-                for (int i = 0; i < 3; ++i)
+                axes t = {p.positionCurrent.x, GOAL_POST_Y, POLE_RADIUS + POLE_HEIGHT};
+                if ((distanceBW(t, p.positionCurrent) <= BALL_RADIUS + POLE_RADIUS) && !poleCollided[1])
                 {
-                    vec[i] = t[i] - p.positionCurrent[i];
+                    poleCollided[1] = true;
+                    double alpha, beta, theta;
+                    beta = atan(p.velocityCurrent.y / p.velocityCurrent.z);
+                    axes vec;
+                    for (int i = 0; i < 3; ++i)
+                    {
+                        vec[i] = t[i] - p.positionCurrent[i];
+                    }
+                    alpha = atan(vec.y / vec.z);
+                    theta = PI / 2.0 - beta + 2 * alpha;
+                    double v = p.velocityCurrent.z * p.velocityCurrent.z + p.velocityCurrent.y * p.velocityCurrent.y;
+                    v = sqrt(v);
+                    p.velocityCurrent.y = v * cos(theta) * p.elasticity;
+                    p.velocityCurrent.z = -v * sin(theta) * p.elasticity;
                 }
-                alpha = atan(vec.y / vec.z);
-                theta = PI / 2.0 - beta + 2 * alpha;
-                double v = p.velocityCurrent.z * p.velocityCurrent.z + p.velocityCurrent.y * p.velocityCurrent.y;
-                v = sqrt(v);
-                p.velocityCurrent.y = v * cos(theta) * p.elasticity;
-                p.velocityCurrent.z = -v * sin(theta) * p.elasticity;
+                else if ((distanceBW(t, p.positionCurrent) <= BALL_RADIUS + POLE_RADIUS) && poleCollided[1])
+                {
+                    poleCollided[1] = false;
+                }
             }
-            else if ((distanceBW(t, p.positionCurrent) <= BALL_RADIUS + POLE_RADIUS) && poleCollided[1])
+        }
+        else
+        {
+            if (p.positionCurrent.x < poles[1].state.positionCurrent[0] + POLE_LENGTH / 2 + POLE_RADIUS &&
+                p.positionCurrent.x > poles[1].state.positionCurrent[0] - POLE_LENGTH / 2 - POLE_RADIUS)
             {
-                poleCollided[1] = false;
+                axes t = {p.positionCurrent.x + poles[1].state.positionCurrent[0], GOAL_POST_Y, POLE_RADIUS + POLE_HEIGHT};
+                if ((distanceBW(t, p.positionCurrent) <= BALL_RADIUS + POLE_RADIUS) && !poleCollided[1])
+                {
+                    poleCollided[1] = true;
+                    double alpha, beta, theta;
+                    beta = atan(p.velocityCurrent.y / p.velocityCurrent.z);
+                    axes vec;
+                    for (int i = 0; i < 3; ++i)
+                    {
+                        vec[i] = t[i] - p.positionCurrent[i];
+                    }
+                    alpha = atan(vec.y / vec.z);
+                    theta = PI / 2.0 - beta + 2 * alpha;
+                    double v = p.velocityCurrent.z * p.velocityCurrent.z + p.velocityCurrent.y * p.velocityCurrent.y;
+                    v = sqrt(v);
+                    p.velocityCurrent.y = v * cos(theta) * p.elasticity;
+                    p.velocityCurrent.z = -v * sin(theta) * p.elasticity;
+                }
+                else if ((distanceBW(t, p.positionCurrent) <= BALL_RADIUS + POLE_RADIUS) && poleCollided[1])
+                {
+                    poleCollided[1] = false;
+                }
             }
         }
     }
@@ -136,6 +231,17 @@ void updatePos(PhysicalState &p, double t)
             if (fabs(p.velocityCurrent[i]) <= THRESHOLD_ZERO)
             {
                 p.velocityCurrent[i] = 0;
+            }
+        }
+        if (currentLevel == MOVE_POST)
+        {
+            if ((p.positionCurrent[0] <= poles[2].state.positionCurrent[0] - POLE_RADIUS + POLE_LENGTH / 2) && (p.positionCurrent[0] >= poles[0].state.positionCurrent[1] + POLE_RADIUS - POLE_LENGTH / 2) &&
+                (p.positionCurrent[2] <= POLE_HEIGHT) && (p.positionCurrent[1] <= GOAL_POST_Y + 0.6 && p.positionCurrent[1] >= GOAL_POST_Y) && !oncePassed)
+            {
+                // cout << "was in crossed\n";
+                /// crossed = true;
+                oncePassed = true;
+                message = "GOAL!";
             }
         }
         if (fabs(p.positionCurrent[2]) <= THRESHOLD_ZERO)
@@ -174,6 +280,7 @@ void renderBitmapString(
 
 void updatePosCallBack(int _)
 {
+    cout << "control in updatePosCallBack\n";
     if (currentMode != SHOOTING && currentlyWaiting)
     {
         currentMode = SHOOTING;
@@ -189,6 +296,7 @@ void updatePosCallBack(int _)
 
 void draw()
 {
+    // cout << "control in draw()\n";
     glLoadIdentity(); // Reset the drawing perspective
     cameraPosition(toLookAt, sphereCamera.distance, sphereCamera.zAngle, sphereCamera.xAngle);
     if (firstTime)
@@ -264,8 +372,7 @@ void draw()
     // {
 
     showScore();
-   
-    
+
     // if(Tries==3){
     //                     string msg="";
     //                    if(Goals>Tries-Goals)msg="A-WIN";
@@ -273,24 +380,19 @@ void draw()
 
     //                    resultMsg(msg);
     //                    Tries=0;
-    //                    Goals=0;  
+    //                    Goals=0;
     //                     //rotateMsg(0);
     //                     cout<<"fff"<<endl;
-                
+
     //                 }
     //             else
     //                 showMsg();
-    
+
     resultMsg();
-    
 
-    
-    
-
-//    loadTextureFile("");
-   
+    //    loadTextureFile("");
+    // cout << "just before draw HUD\n";
     drawHUD();
-   
 
     glutSwapBuffers();
     glutPostRedisplay();
@@ -298,6 +400,8 @@ void draw()
 
 void showScore()
 {
+
+    // cout << "showScore\n";
     glPushMatrix();
     glTranslatef(0, GOAL_POST_Y, POLE_HEIGHT + BALL_RADIUS);
 
@@ -340,10 +444,11 @@ void showScore()
     glPushMatrix();
     currentTextColor = {32 / 255.0, 140 / 255.0, 32 / 255.0, 1.0};
     glTranslatef(POLE_LENGTH / 2, 0, 1);
-//    glScalef(FONT_SIZE,FONT_SIZE,FONT_SIZE);
-int y=Goals-prevGoals;
-if(y<0) y=0;
-y=y%5;
+    //    glScalef(FONT_SIZE,FONT_SIZE,FONT_SIZE);
+    int y = Goals - prevGoals;
+    if (y < 0)
+        y = 0;
+    y = y % 5;
     writeText(to_string(y), font, RIGHT);
     glPopMatrix();
 
@@ -357,13 +462,15 @@ y=y%5;
     glPushMatrix();
     currentTextColor = {0.1, 0.1, 1.0, 1.0};
     glTranslatef(POLE_LENGTH / 2, 0, 0);
-//    glScalef(FONT_SIZE,FONT_SIZE,FONT_SIZE);
-    int x=Tries%5-y;
-    if(Tries%5==0&&Tries!=0){
-        x=5-y;
+    //    glScalef(FONT_SIZE,FONT_SIZE,FONT_SIZE);
+    int x = Tries % 5 - y;
+    if (Tries % 5 == 0 && Tries != 0)
+    {
+        x = 5 - y;
     }
-    if(x<0) x=0;
-    x=x%5;
+    if (x < 0)
+        x = 0;
+    x = x % 5;
     writeText(to_string(x), font, RIGHT);
     glPopMatrix();
 
@@ -372,6 +479,7 @@ y=y%5;
 
 void incrementPowerMeter(int _)
 {
+    cout << "control in incPowerMeter\n";
     static int up = 1;
     if (powerMeter > 1.0 || powerMeter < 0.0)
     {
@@ -385,6 +493,7 @@ void incrementPowerMeter(int _)
 }
 void incrementPowerMeter2(int _)
 {
+    cout << "control in incPowerMeter2\n";
     static int up = 1;
     if (powerMeter2 > 1.0 || powerMeter2 < 0.0)
     {
@@ -400,7 +509,7 @@ bool powering_set = false;
 // void handleKeypress(unsigned char key, // The key that was pressed
 //                     int x, int y)
 // { // The current mouse coordinates
-    
+
 //     if (currentMode != HELP)
 //     {
 //         switch (key)
@@ -417,7 +526,6 @@ bool powering_set = false;
 //         }
 //         else if(key=='2'){
 //             currentLevel=EASY;
-
 
 //           defender.state.velocityInitial[0] = defender.state.velocityCurrent[0] = DEFENDER_SPEED_EASY;
 //         defender.state.velocityInitial[2]=defender.state.velocityCurrent[2]=DEFENDER_SPEED_VERTICAL;
@@ -443,10 +551,9 @@ bool powering_set = false;
 //         // defender.state.accelerationCurrent[2] = -29.8;
 //         }
 //         currentMode=ADJUSTING;
-        
+
 //     }
 //     }
-    
 
 //     if (currentMode != HELP) {
 //         switch (key) {
@@ -462,12 +569,12 @@ bool powering_set = false;
 // //            cout<<sphereCamera.distance<<endl;
 //                 break;
 //         }
-//     } 
+//     }
 //     else {
 //         if (key == 27){
 //             currentMode = CHOOSE;
-//         } 
-        
+//         }
+
 //     }
 
 //     downKeys[key] = true;
@@ -497,7 +604,7 @@ bool powering_set = false;
 //     if(currentLevel==HUMAN){
 //         if(key==97){
 //             //left
-        
+
 //             defender.state.velocityInitial.x = -DEFENDER_SPEED;
 //             defender.state.velocityCurrent.x = -DEFENDER_SPEED;
 //             defender.state.accelerationCurrent[0] = 10;
@@ -515,54 +622,96 @@ bool powering_set = false;
 //                 defender.state.velocityCurrent[2]=DEFENDER_SPEED_VERTICAL;
 //                 defender.state.accelerationCurrent[2] = -9.8;
 //             }
-        
+
 //         }
 //     }
-    
-
-    
 
 // }
-
 
 void handleKeypress(unsigned char key, // The key that was pressed
                     int x, int y)
 { // The current mouse coordinates
+    cout << "control in keypress\n";
+    if (currentMode == CHOOSE)
+    {
 
-    if(currentMode==CHOOSE){
-        if(key=='1'){
-            currentLevel=HUMAN;
-            cout<<"human"<<endl;
+        if (key == '1')
+        {
+            currentLevel = HUMAN;
+            cout << "human" << endl;
+            currentMode = ADJUSTING;
         }
-        else if(key=='2'){
-            currentLevel=EASY;
+        else if (key == '2')
+        {
+            currentLevel = EASY;
 
-
-          defender.state.velocityInitial[0] = defender.state.velocityCurrent[0] = DEFENDER_SPEED_EASY;
-        defender.state.velocityInitial[2]=defender.state.velocityCurrent[2]=DEFENDER_SPEED_VERTICAL;
-        defender.state.velocityInitial.x = defender.state.velocityCurrent.x = DEFENDER_SPEED_EASY;
-        defender.state.velocityInitial.z=defender.state.velocityCurrent.z=DEFENDER_SPEED_VERTICAL;
-        // defender.state.accelerationCurrent[2] = -9.8;
-            cout<<"easy"<<endl;
+            defender.state.velocityInitial[0] = defender.state.velocityCurrent[0] = DEFENDER_SPEED_EASY;
+            defender.state.velocityInitial[2] = defender.state.velocityCurrent[2] = DEFENDER_SPEED_VERTICAL;
+            defender.state.velocityInitial.x = defender.state.velocityCurrent.x = DEFENDER_SPEED_EASY;
+            defender.state.velocityInitial.z = defender.state.velocityCurrent.z = DEFENDER_SPEED_VERTICAL;
+            // defender.state.accelerationCurrent[2] = -9.8;
+            cout << "easy" << endl;
+            currentMode = ADJUSTING;
         }
-        else if(key=='3'){
-            currentLevel=MEDIUM;
+        else if (key == '3')
+        {
+            currentLevel = MEDIUM;
             defender.state.velocityInitial[0] = defender.state.velocityCurrent[0] = DEFENDER_SPEED_MEDIUM;
-        defender.state.velocityInitial[2]=defender.state.velocityCurrent[2]=DEFENDER_SPEED_VERTICAL;
-        defender.state.velocityInitial.x = defender.state.velocityCurrent.x = DEFENDER_SPEED_MEDIUM;
-        defender.state.velocityInitial.z=defender.state.velocityCurrent.z=DEFENDER_SPEED_VERTICAL;
-        // defender.state.accelerationCurrent[2] = -19.8;
+            defender.state.velocityInitial[2] = defender.state.velocityCurrent[2] = DEFENDER_SPEED_VERTICAL;
+            defender.state.velocityInitial.x = defender.state.velocityCurrent.x = DEFENDER_SPEED_MEDIUM;
+            defender.state.velocityInitial.z = defender.state.velocityCurrent.z = DEFENDER_SPEED_VERTICAL;
+            // defender.state.accelerationCurrent[2] = -19.8;
+            currentMode = ADJUSTING;
         }
-        else if(key=='4'){
-            currentLevel=HARD;
+        else if (key == '4')
+        {
+            currentLevel = HARD;
             defender.state.velocityInitial[0] = defender.state.velocityCurrent[0] = DEFENDER_SPEED_HARD;
-        defender.state.velocityInitial[2]=defender.state.velocityCurrent[2]=DEFENDER_SPEED_VERTICAL;
-        defender.state.velocityInitial.x = defender.state.velocityCurrent.x = DEFENDER_SPEED_HARD;
-        defender.state.velocityInitial.z=defender.state.velocityCurrent.z=DEFENDER_SPEED_VERTICAL;
-        // defender.state.accelerationCurrent[2] = -29.8;
+            defender.state.velocityInitial[2] = defender.state.velocityCurrent[2] = DEFENDER_SPEED_VERTICAL;
+            defender.state.velocityInitial.x = defender.state.velocityCurrent.x = DEFENDER_SPEED_HARD;
+            defender.state.velocityInitial.z = defender.state.velocityCurrent.z = DEFENDER_SPEED_VERTICAL;
+            // defender.state.accelerationCurrent[2] = -29.8;
+            currentMode = ADJUSTING;
         }
-        currentMode=ADJUSTING;
-        
+        else if (key == '5')
+        {
+            poles[0].state.velocityCurrent[0] = 5;
+            poles[2].state.velocityCurrent[0] = 5;
+            poles[1].state.velocityCurrent[0] = 5;
+            defender.state.velocityCurrent[0] = 10;
+            // cout << "was in MOVE_POST\n";
+            // for (int i = 0; i < 3; ++i)
+            // {
+
+            //     defender.state.positionCurrent[i] =
+            //         defender.state.velocityCurrent[i] * t + 0.5 * defender.state.accelerationCurrent[i] * t * t +
+            //         defender.state.positionCurrent[i];
+            //     defender.state.velocityCurrent[i] =
+            //         defender.state.velocityCurrent[i] + defender.state.accelerationCurrent[i] * t;
+            // }
+
+            // if (defender.state.positionCurrent[2] <= 0)
+            // {
+            //     defender.state.positionCurrent[2] = 0;
+            //     defender.state.velocityCurrent[2] = 0;
+            //     defender.state.accelerationCurrent[2] = 0;
+            // }
+
+            // if (defender.state.positionCurrent[0] >= 15 || defender.state.positionCurrent[0] <= -15)
+            // {
+            //     cout << "was here in the updDefPos\n";
+            //     defender.state.velocityCurrent[0] *= -1;
+            //     defender.state.accelerationCurrent[0] *= -1;
+            // }
+            currentLevel = MOVE_POST;
+            currentMode = ADJUSTING;
+        }
+        if (key == 27)
+        {
+            cout << "was here in the ESCAPE from CHOOSE MODE\n";
+            currentMode = HELP;
+            return;
+        }
     }
 
     if (currentMode != HELP)
@@ -598,8 +747,8 @@ void handleKeypress(unsigned char key, // The key that was pressed
         case '\r':
             currentMode = AIMING;
             break;
-        case EXIT_KEY: // Escape key
-            exit(0);   // Exit the program
+        case 27:                  // Escape key
+            currentMode = CHOOSE; // Exit the program
         }
     }
     if (currentMode == AIMING)
@@ -695,11 +844,12 @@ double sq(double x)
 
 void idle()
 {
+    // cout << "control in idle\n";
     if (!currentlyWaiting)
     {
         if (currentMode == POWERING_ACC && !downKeys[112])
         {
-            cout << "was here in P lifting ACC.\n";
+            // cout << "was here in P lifting ACC.\n";
             currentMode = POWERING_IDLE;
             /// powering_set = true;
             // if (downKeys[' '])
@@ -708,24 +858,24 @@ void idle()
             //     glutTimerFunc(1000 * 1 / 60.0, incrementPowerMeter, 0);
             // }
             double powerMeter_half = powerMeter2 - 0.5;
-            cout << "value of powerMeter2: " << powerMeter2 << endl;
-            // sphere.accelerationCurrent.x = -20.0 * (powerMeter_half);
+            // cout << "value of powerMeter2: " << powerMeter2 << endl;
+            //  sphere.accelerationCurrent.x = -20.0 * (powerMeter_half);
             if (powerMeter2 >= 1.0)
                 powerMeter2 = 1.0;
             // currentlyWaiting = true;
         }
         if (currentMode == POWERING && !downKeys[' '] && powering_set)
         {
-            cout << "was here in space lifting.\n";
+            // cout << "was here in space lifting.\n";
             sphere.velocityCurrent[0] = sphere.velocityInitial[0] =
                 cos(DEG2GRAD(aimArrow.zAngle)) * sin(DEG2GRAD(aimArrow.yAngle)) * BALL_MAX_SPEED * powerMeter;
             sphere.velocityCurrent[1] = sphere.velocityInitial[1] =
                 cos(DEG2GRAD(aimArrow.zAngle)) * cos(DEG2GRAD(aimArrow.yAngle)) * BALL_MAX_SPEED * powerMeter;
             sphere.velocityCurrent[2] = sphere.velocityInitial[2] =
                 sin(DEG2GRAD(aimArrow.zAngle)) * BALL_MAX_SPEED * powerMeter + BALL_MIN_SPEED;
-            cout << "Value of the initial velocity is: " << sphere.velocityInitial[0] << " " << sphere.velocityInitial[1] << "\n";
-            // magnus effect x dir acceleration
-            // sqrt(sq(sphere.velocityCurrent[0]) + sq(sphere.velocityCurrent[1]))
+            // cout << "Value of the initial velocity is: " << sphere.velocityInitial[0] << " " << sphere.velocityInitial[1] << "\n";
+            //  magnus effect x dir acceleration
+            //  sqrt(sq(sphere.velocityCurrent[0]) + sq(sphere.velocityCurrent[1]))
             double sgn1 = 1, sgn2 = 1;
             if (sphere.velocityInitial[0] <= 0)
             {
@@ -754,7 +904,7 @@ void idle()
         }
         if (currentMode == SHOOTING)
         {
-            if (sphere.positionCurrent.y > GOAL_POST_Y || sphere.velocityCurrent.y <= 0)
+            if (sphere.positionCurrent[1] > GOAL_POST_Y || sphere.velocityCurrent[1] <= 0)
             {
                 if (!determineSphere && !stopEverything)
                 {
@@ -762,27 +912,41 @@ void idle()
                     *determineSphere = sphere;
                     //                    cout << *determineSphere;
                     scoredGoal = isItGoal(*determineSphere);
-                    if (scoredGoal)
+                    if (currentLevel != MOVE_POST)
                     {
-                        Goals++;
-                        // system("paplay resources/goal.wav&");
+
+                        if (scoredGoal)
+                        {
+                            Goals++;
+                            // system("paplay resources/goal.wav&");
+                        }
+                    }
+                    else
+                    {
+
+                        if (scoredGoal)
+                        {
+                            message = "GOAL!";
+                            Goals++;
+                            // system("paplay resources/goal.wav&");
+                        }
+                        else
+                        {
+                            message = "MISS!";
+                        }
                     }
 
-                    
+                    // currentMode = ADJUSTING;
                     glutTimerFunc(1000 * RESET_TIME, initialiseEverythingCallback, 0);
                     Tries++;
-                    cout<<Tries<<endl;
-                    if(Tries%5==0){
-                       
-                      // resultMsg(msg); 
-                
-        
-    
-                       
+                    cout << Tries << endl;
+                    if (Tries % 5 == 0)
+                    {
+
+                        // resultMsg(msg);
+                        currentMode = CHOOSE;
                         rotateMsg(0);
-                        
                     }
-                    
                 }
             }
         }
@@ -805,46 +969,9 @@ void handleUpKeypress(unsigned char key, int x, int y)
 
 void handleSpecialKeypress(int key, int x, int y)
 {
-    //    if (currentMode == ADJUSTING || currentMode == REPLAY) {
-    //        switch (key) {
-    //            case GLUT_KEY_UP:
-    //                sphereCamera.zAngle += 1.0f;
-    //                break;
-    //            case GLUT_KEY_DOWN:
-    //                sphereCamera.zAngle -= 1.0f;
-    //                break;
-    //            case GLUT_KEY_LEFT:
-    //                sphereCamera.xAngle -= 1.0f;
-    //                break;
-    //            case GLUT_KEY_RIGHT:
-    //                sphereCamera.xAngle += 1.0f;
-    //                break;
-    //        }
-    //    }
     if (currentMode == AIMING)
     {
-        //    glTranslatef(36.0, 0, 0);
-        //    glScalef(-1.0, 1.0, 1.0);
-        //    glColor4f(0.1, 0.1, 0.1, 1.0);
-        //    glBegin(GL_QUADS);
-        //    glVertex2f(-10.0, -0.2);
-        //    glVertex2f(5.0, -0.2);
-        //    glVertex2f(5.0, 0.2);
-        //    glVertex2f(-10.0, 0.2);
-        //    glEnd();
-        //    glBegin(GL_TRIANGLES);
-        //
-        //    glVertex2f(5.0, -0.4);
-        //    glVertex2f(8.0, 0.0);
-        //    glVertex2f(5.0, 0.4);
-        //    glEnd();
-        //
-        //    glColor3f(0.3, 0.3, 1.0);
-        //    glTranslatef(18, 0, 0);
-        //    glBegin(GL_LINES);
-        //    glVertex2f(-10, 0);
-        //    glVertex2f(10.0, 0);
-        //    glEnd();
+
         const float increment = 2.0f;
         switch (key)
         {
@@ -938,8 +1065,7 @@ int main(int argc, char *argv[])
     // convertToTexture("resources/texture.txt", "resources/texture.texture");
     initialiseEverything();
     currentMode = HELP;
-    currentLevel=NIL;
-
+    currentLevel = NIL;
 
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA | GLUT_MULTISAMPLE);
@@ -947,7 +1073,7 @@ int main(int argc, char *argv[])
     glutCreateWindow(WINDOW_NAME);
     glutFullScreen();
     glutReshapeFunc(handleResize);
-    
+
     glutKeyboardFunc(handleKeypress);
     glutKeyboardUpFunc(handleUpKeypress);
     glutSpecialFunc(handleSpecialKeypress);
@@ -963,7 +1089,7 @@ int main(int argc, char *argv[])
     // glutMotionFunc(move_mouse);
     glutDisplayFunc(draw);
     glutIdleFunc(idle);
-    
+
     myInit();
     glutMainLoop();
 
