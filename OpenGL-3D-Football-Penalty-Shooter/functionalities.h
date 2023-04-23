@@ -1,6 +1,4 @@
-//
-// Created by kunal on 3/3/18.
-//
+// This file contains different declarations of functionalities used in our project
 
 #ifndef FOOTBALL_PENALTY_SHOOTER_FUNCTIONALITIES_H
 #define FOOTBALL_PENALTY_SHOOTER_FUNCTIONALITIES_H
@@ -9,10 +7,10 @@
 #include <GL/glut.h>
 #include "constants.h"
 using namespace std;
-#define DEG2GRAD(x) ((x)*PI / 180.0)
 
+#define DEG2GRAD(x) ((x)*PI / 180.0)
 #define GRAD2DEG(x) ((x)*180.0 / PI)
-using namespace std;
+
 
 extern unsigned int Tries, Goals;
 
@@ -21,7 +19,6 @@ void handleResize(int w, int h);
 struct axes
 {
     double x, y, z;
-
     double &operator[](int);
 };
 
@@ -77,13 +74,13 @@ enum mode
 {
     ADJUSTING,
     AIMING,
-    POWERING,
+    POWERING,           //speed meter
     SHOOTING,
     HELP,
     NONE,
     CHOOSE,
-    POWERING_ACC,
-    POWERING_IDLE
+    POWERING_ACC,           //spin meter
+    POWERING_IDLE       // transition between both meter
 };
 enum level
 {
@@ -99,6 +96,7 @@ void backgroundMusicPlayer(int);
 
 extern double powerMeter;
 extern double powerMeter2;
+
 extern string message;
 extern bool oncePassed;
 
@@ -142,10 +140,9 @@ float writeText(string text, int texture, alignment align = LEFT);
 float writeMultiLineText(string text, int texture, alignment align = LEFT);
 void drawChalkLines();
 
-// void showMsg();
 void resultMsg();
-// void fun();
 void rotateMsg(int _);
 
 extern axes toLookAt;
+
 #endif // FOOTBALL_PENALTY_SHOOTER_FUNCTIONALITIES_H

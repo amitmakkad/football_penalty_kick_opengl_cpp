@@ -1,6 +1,4 @@
-//
-// Created by kunal on 3/3/18.
-//
+// This file contains all constants used in all other files
 
 #ifndef FOOTBALL_PENALTY_SHOOTER_CONSTANTS_H
 #define FOOTBALL_PENALTY_SHOOTER_CONSTANTS_H
@@ -23,7 +21,7 @@
 #define DEFENDER_THICKNESS 0.2
 #define DEFENDER_WIDTH 1.5
 #define DEFENDER_SPEED 3
-#define DEFENDER_SPEED_VERTICAL 4
+#define DEFENDER_SPEED_VERTICAL 3
 #define DEFENDER_SPEED_EASY 3
 #define DEFENDER_SPEED_MEDIUM 6
 #define DEFENDER_SPEED_HARD 10

@@ -1,15 +1,13 @@
-//
-// Created by kunal on 4/3/18.
-//
+// This file contains different functionalities used in our project
 
 #include "functionalities.h"
 #include "shapes.h"
 #include <bits/stdc++.h>
-
 using namespace std;
 
 level currentLevel = NIL;
 mode currentMode = ADJUSTING;
+
 bool currentlyWaiting;
 bool downKeys[127];
 bool scoredGoal;
@@ -27,13 +25,9 @@ void handleResize(int w, int h)
     glLoadIdentity(); // Reset the camera
     glFrustum(-1.0 * w / h, 1.0 * w / h, -1, 1, 2, 100);
     glMatrixMode(GL_MODELVIEW);
-    //    gluPerspective(45,                  //The camera angle
-    //                   (double) w / (double) h, //The width-to-height ratio
-    //                   1.0,                   //The near z clipping coordinate
-    //                   200.0);                //The far z clipping coordinate
 }
 
-double &axes::operator[](int index)
+double &axes::operator[](int index)     //swtching .x,.y,.z into arrays format
 {
     switch (index)
     {
@@ -87,7 +81,7 @@ ostream &operator<<(ostream &out, PhysicalState &p)
     out << p.timePassed << endl;
 }
 
-bool isItGoal(PhysicalState ball)
+bool isItGoal(PhysicalState ball)       //checking goal condition
 {
     if (currentLevel == MOVE_POST)
     {
@@ -110,39 +104,16 @@ bool isItGoal(PhysicalState ball)
     }
 }
 
-void backgroundMusicPlayer(int _)
+void backgroundMusicPlayer(int _)   //plays sound
 {
-
-    //    if (currentMode != GOAL_ANIMATION)
     system("paplay resources/back.wav --volume 30000 &");
     glutTimerFunc(5 * 1000, backgroundMusicPlayer, 0);
 }
 
-// int LoadGLTexture(char *filename) {
-//     GLuint texture = SOIL_load_OGL_texture
-//             (
-//                     filename,
-//                     SOIL_LOAD_AUTO,
-//                     SOIL_CREATE_NEW_ID,
-//                     SOIL_FLAG_INVERT_Y
-//             );
-//
-//
-//     if (texture == 0)
-//         return false;
-//
-//
-//     glBindTexture(GL_TEXTURE_2D, texture);
-//     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-//     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-//
-//     return texture;
-// }
-
-void initialiseEverything()
+void initialiseEverything()     // reset after every shoot
 {
     currentMode = ADJUSTING;
-    cout << "control in initiliaseEverything()\n";
+
     ground.Type = WALL;
     axes temp;
     temp = {-20, -20, -BALL_RADIUS};
@@ -188,7 +159,7 @@ void initialiseEverything()
     defender.width = DEFENDER_WIDTH;
     defender.height = 2.3;
 
-    if (currentLevel == EASY)
+    if (currentLevel == EASY)   // setting parameters of defender in easy level
     {
 
         defender.state.velocityInitial[0] = defender.state.velocityCurrent[0] = DEFENDER_SPEED_EASY;
@@ -211,9 +182,9 @@ void initialiseEverything()
         poles[2].state.positionCurrent[0] = 0;
         poles[1].state.positionCurrent[0] = 0;
     }
-    if (currentLevel == MEDIUM)
+    if (currentLevel == MEDIUM)     // setting parameters of defender in medium level
     {
-        // cout<<"easyssssssssssssssssss"<<endl;
+
         defender.state.velocityInitial[0] = defender.state.velocityCurrent[0] = DEFENDER_SPEED_MEDIUM;
         defender.state.velocityInitial[2] = defender.state.velocityCurrent[2] = DEFENDER_SPEED_VERTICAL;
         defender.state.velocityInitial.x = defender.state.velocityCurrent.x = DEFENDER_SPEED_MEDIUM;
@@ -234,9 +205,9 @@ void initialiseEverything()
         poles[2].state.positionCurrent[0] = 0;
         poles[1].state.positionCurrent[0] = 0;
     }
-    if (currentLevel == HARD)
+    if (currentLevel == HARD)       // setting parameters of defender in hard level
     {
-        // cout << "easyssssssssssssssssss" << endl;
+  
         defender.state.velocityInitial[0] = defender.state.velocityCurrent[0] = DEFENDER_SPEED_HARD;
         defender.state.velocityInitial[2] = defender.state.velocityCurrent[2] = DEFENDER_SPEED_VERTICAL;
         defender.state.velocityInitial.x = defender.state.velocityCurrent.x = DEFENDER_SPEED_HARD;
@@ -257,13 +228,13 @@ void initialiseEverything()
         poles[1].state.positionCurrent[0] = 0;
     }
 
-    if (currentLevel == HUMAN)
+    if (currentLevel == HUMAN)              // setting parameters of defender in play with human
     {
-        // cout << "human" << endl;
-        defender.state.velocityInitial[2] = 0; // DEFENDER_SPEED_VERTICAL;
-        defender.state.velocityCurrent[2] = 0; // DEFENDER_SPEED_VERTICAL;
-        defender.state.velocityInitial[0] = 0; // DEFENDER_SPEED_VERTICAL;
-        defender.state.velocityCurrent[0] = 0; // DEFENDER_SPEED_VERTICAL;
+        
+        defender.state.velocityInitial[2] = 0; 
+        defender.state.velocityCurrent[2] = 0; 
+        defender.state.velocityInitial[0] = 0; 
+        defender.state.velocityCurrent[0] = 0; 
 
         defender.state.accelerationCurrent[2] = 0;
         defender.state.accelerationCurrent[0] = 0;
@@ -273,10 +244,10 @@ void initialiseEverything()
         defender.state.positionCurrent[1] = 0;
         defender.state.positionCurrent[2] = 0;
 
-        defender.state.velocityInitial.x = 0; // DEFENDER_SPEED;
-        defender.state.velocityCurrent.x = 0; // DEFENDER_SPEED;
-        defender.state.velocityInitial.y = 0; // DEFENDER_SPEED_VERTICAL;
-        defender.state.velocityCurrent.y = 0; // DEFENDER_SPEED_VERTICAL;
+        defender.state.velocityInitial.x = 0; 
+        defender.state.velocityCurrent.x = 0; 
+        defender.state.velocityInitial.y = 0; 
+        defender.state.velocityCurrent.y = 0; 
         poles[0].state.velocityCurrent[0] = 0;
         poles[2].state.velocityCurrent[0] = 0;
         poles[1].state.velocityCurrent[0] = 0;
@@ -284,24 +255,16 @@ void initialiseEverything()
         poles[2].state.positionCurrent[0] = 0;
         poles[1].state.positionCurrent[0] = 0;
     }
-    if (currentLevel == MOVE_POST)
+    if (currentLevel == MOVE_POST)  // setting parameters of defender in move post level
     {
-        // cout << "initialised in MOVE_POST\n";
         poles[0].state.velocityCurrent[0] = 5;
         poles[2].state.velocityCurrent[0] = 5;
         poles[1].state.velocityCurrent[0] = 5;
         defender.state.velocityCurrent[0] = 5;
     }
-    // defender.state.velocityInitial[0]= defender.state.velocityCurrent[0] = DEFENDER_SPEED;
-    //         defender.state.velocityInitial[2] = defender.state.velocityCurrent[2] = DEFENDER_SPEED_VERTICAL;
-    //         defender.state.velocityInitial[2]=DEFENDER_SPEED_VERTICAL;
-    //         defender.state.velocityCurrent[2]=DEFENDER_SPEED_VERTICAL;
-    //         cout<<"nss easy"<<endl;
+   
 
-    //         defender.state.accelerationCurrent[0] = 0;
-    //         defender.state.accelerationCurrent[1] = 0;
-    //         defender.state.accelerationCurrent[2] = -9.8;
-
+                                                //updating ball position
     sphereCamera.xAngle = -90.0f;
     sphereCamera.zAngle = 15.0f;
     sphereCamera.distance = 5.0;
@@ -312,7 +275,6 @@ void initialiseEverything()
     }
     sphere.positionCurrent[1] = -10;
     powerMeter = 0.0;
-    // currentMode = CHOOSE;
 
     sphere.positionInitial.x = sphere.positionCurrent.x = 0.0;
     sphere.positionInitial.y = -10;
@@ -333,14 +295,12 @@ void initialiseEverything()
 
 void initialiseEverythingCallback(int _)
 {
-    // cout << "control in initialiseEverythingCallback\n";
     stopEverything = true;
     initialiseEverything();
 }
 
-void drawGoalPost()
+void drawGoalPost()         //drawing goal post
 {
-    // cout << "control in drawGoalPost()\n";
 
     {
         glPushMatrix();
@@ -375,7 +335,7 @@ camera::camera()
 
 camera sphereCamera;
 
-void rainBox(double alpha = 0.7)
+void rainBox(double alpha = 0.7)        //used in making powermeter
 {
 
     glBegin(GL_QUADS);
@@ -398,7 +358,6 @@ void rainBox(double alpha = 0.7)
 
 void myShear()
 {
-    //    glRotatef(-45, 0.0, 0.0, 1.0);
     float m[] = {
         1.0, 0.0, 0.0, 0.0,
         1.0, 1.0, 0.0, 0.0,
@@ -412,7 +371,6 @@ double powerMeter2 = 0.0;
 
 void drawPowerMeter()
 {
-    // cout << "control in drawPowerMeter\n";
 
     glPushMatrix();
     glPushAttrib(GL_CURRENT_BIT);
@@ -439,7 +397,7 @@ void drawPowerMeter()
 
 void drawPowerMeter2()
 {
-    cout << "control in drawPowerMeter2\n";
+
     glPushMatrix();
     glPushAttrib(GL_CURRENT_BIT);
 
@@ -465,13 +423,11 @@ void drawPowerMeter2()
 
 void drawHUD()
 {
-    // cout << "control in drawHUD\n";
     glDisable(GL_LIGHTING);
     if (currentMode == HELP)
     {
-        // cout << "was here in draw help mode\n";
-
-        const char *instructions = R"INSTRUCT(
+                                            //drawing instruction page
+        const char *instructions = R"INSTRUCT(      
         INSTRUCTIONS
         You can use the mouse to look around.
         Use the +/- keys for zooming in/out.
@@ -479,34 +435,15 @@ void drawHUD()
         Press the Enter/Return key to enter Aiming Mode.
         Direct the arrow with the arrow keys to set up the
         direction of the shot.
-        POWERING
-        Press and hold Space after aiming to power up.
-        Release Space to select the specified power level.
-        Press the ESC key (when holding down SPACE) to cancel
-        POWERING mode.
+        SPIN AND POWERING
+        Press and Hold 'p' for spin
+        Press and Hold Space for speed
+        Press the ESC key (when holding down) to cancel
         Press ESC key to return to the previous mode or to exit the
         instructions.
         Press Q at any time to exit the game.
         )INSTRUCT";
 
-        // glPushMatrix();
-        // glRotatef(90 + sphereCamera.xAngle, 0, 0, 1);
-        // glRotatef(-sphereCamera.zAngle, 1, 0, 0);
-        // glTranslatef(0, -BALL_RADIUS, -BALL_RADIUS);
-
-        // glColor4f(0, 0, 0, 0.8);
-        // glBegin(GL_QUADS);
-        // glVertex3f(-10, 0, -5);
-        // glVertex3f(10, 0, -5);
-        // glVertex3f(10, 0, 6);
-        // glVertex3f(-10, 0, 6);
-        // glEnd();
-        // glScalef(0.5, 0.5, 0.5);
-        // glTranslatef(0, -0.001, 9.5);
-
-        // currentTextColor = {1.0, 1.0, 1.0, 1.0};
-        // writeMultiLineText(instructions, font, CENTER);
-        // glPopMatrix();
         glPushMatrix();
         glRotatef(90 + sphereCamera.xAngle, 0, 0, 1);
         glRotatef(-sphereCamera.zAngle, 1, 0, 0);
@@ -528,41 +465,23 @@ void drawHUD()
         glPopMatrix();
     }
     else
-    { // HUD Render
-        // && Tries % 5 == 0
-        if (currentMode == CHOOSE && Tries % 5 == 0)
+    { 
+        if (currentMode == CHOOSE && Tries % 5 == 0)        //drawing choose page
         {
             prevGoals = Goals;
             const char *instructions = R"INSTRUCT(
             Choose:-
+
             PLAY WITH HUMAN:-
-               HUMAN - 1
+            HUMAN - 1
+
             PLAY WITH COMPUTER:-
                EASY - 2   
-               MEDIUM - 3
-               HARD - 4
-               MOVE POST - 5
+              MEDIUM - 3
+            HARD - 4
+
+              MOVE POST - 5
             )INSTRUCT";
-
-            // glPushMatrix();
-            // glRotatef(90 + sphereCamera.xAngle, 0, 0, 1);
-            // glRotatef(-sphereCamera.zAngle, 1, 0, 0);
-
-            // glTranslatef(0, -BALL_RADIUS, -BALL_RADIUS);
-
-            // glColor4f(0, 0, 0, 0.8);
-            // glBegin(GL_QUADS);
-            // glVertex3f(-10, 0, -5);
-            // glVertex3f(10, 0, -5);
-            // glVertex3f(10, 0, 6);
-            // glVertex3f(-10, 0, 6);
-            // glEnd();
-            // glScalef(0.5, 0.5, 0.5);
-            // glTranslatef(0, -0.001, 9.5);
-
-            // currentTextColor = {1.0, 1.0, 1.0, 1.0};
-            // writeMultiLineText(instruction, font, CENTER);
-            // glPopMatrix();
             glPushMatrix();
             glRotatef(90 + sphereCamera.xAngle, 0, 0, 1);
             glRotatef(-sphereCamera.zAngle, 1, 0, 0);
@@ -590,15 +509,15 @@ void drawHUD()
             glPushAttrib(GL_CURRENT_BIT);
             glPushMatrix();
             glLoadIdentity();
-            gluOrtho2D(-100.0, 100.0, -100.0, 100.0); // glutGet(GLUT_WINDOW_WIDTH) / glutGet(GLUT_WINDOW_HEIGHT)
+            gluOrtho2D(-100.0, 100.0, -100.0, 100.0); 
             glMatrixMode(GL_MODELVIEW);
             glLoadIdentity();
-            //        glDisable(GL_CULL_FACE);
+
 
             glClear(GL_DEPTH_BUFFER_BIT);
 
             if (currentMode == POWERING)
-            { // Power Bar
+            {                                                              // Power Bar
                 glPushMatrix();
 
                 glTranslatef(90, 0, 0);
@@ -614,7 +533,7 @@ void drawHUD()
                 glPopMatrix();
             }
             if (currentMode == POWERING_ACC)
-            { // Power Bar
+            {                                                               // Power Bar
                 glPushMatrix();
 
                 glTranslatef(-84, 0, 0);
@@ -643,9 +562,8 @@ void drawHUD()
     glEnable(GL_LIGHTING);
 }
 
-void updateGoalPostPosition(int _)
+void updateGoalPostPosition(int _)      //goal post movement
 {
-    // cout << "control in updateGoalPostPosition\n";
 
     poles[0].state.timePassed += 1 / 60.0;
     poles[1].state.timePassed += 1 / 60.0;
@@ -654,16 +572,12 @@ void updateGoalPostPosition(int _)
 
     for (int i = 0; i < 3; ++i)
     {
-        // defender.state.velocityCurrent[i] += defender.state.commVelocity[i];
-        poles[i].state.positionCurrent[0] +=
-            poles[i].state.velocityCurrent[0] * t;
+        poles[i].state.positionCurrent[0] +=poles[i].state.velocityCurrent[0] * t;
     }
 
     if (GOAL_POST_X + POLE_LENGTH / 2 - POLE_RADIUS + poles[2].state.positionCurrent[0] >= 15 || GOAL_POST_X - POLE_LENGTH / 2 + POLE_RADIUS + poles[0].state.positionCurrent[0] <= -15)
     {
-        // defender.state.positionCurrent[2] = 0;
-        // defender.state.velocityCurrent[2] = 0;
-        // defender.state.accelerationCurrent[2] = 0;
+
         for (int i = 0; i < 3; ++i)
         {
             poles[i].state.velocityCurrent[0] *= -1;
@@ -672,10 +586,8 @@ void updateGoalPostPosition(int _)
     glutTimerFunc(1000 * 1 / 60.0, updateGoalPostPosition, 1 / 60.0);
 }
 
-void updateDefenderPosition(int _)
+void updateDefenderPosition(int _)      //defender motion
 {
-    // cout << "control in updateDefenderPosition\n";
-
     static float increment = 2.0f;
     static int done = 0;
     defender.armRot += increment;
@@ -689,42 +601,10 @@ void updateDefenderPosition(int _)
     double t = 1 / 60.0;
     defender.acceleration();
 
-    // if (currentMode == ADJUSTING || currentMode == SHOOTING)
-    // {
-    // if (!done)
-    // {
-    //            cout<<sphere.velocityCurrent.x<<endl;
-    // if (sphere.velocityCurrent.x < 0)
-    // {
-    //     if (defender.state.velocityCurrent.x > 0)
-    //     {
-    //         defender.state.velocityCurrent.x = -defender.state.velocityCurrent.x;
-    //     }
-
-    //     // defender.state.velocityCurrent.x = -DEFENDER_SPEED;
-    //     done = 1;
-    // }
-    // else if (sphere.velocityCurrent.x > 0)
-    // {
-    //     // defender.state.velocityCurrent.x = DEFENDER_SPEED;
-    //     if (defender.state.velocityCurrent.x < 0)
-    //     {
-    //         defender.state.velocityCurrent.x = -defender.state.velocityCurrent.x;
-    //     }
-
-    //     done = 1;
-    // }
-    // else
-    // {
-    //     defender.state.velocityCurrent.x = 0;
-    //     done = 1;
-    // }
-    // }
-
-    if (currentLevel == HUMAN)
+    if (currentLevel == HUMAN)          //updting defender in human level
     {
 
-        if (defender.state.positionCurrent[2] < 0)
+        if (defender.state.positionCurrent[2] < 0)      //if defender goes inside ground
         {
             defender.state.positionCurrent[2] = 0;
             defender.state.velocityCurrent[2] = 0;
@@ -734,7 +614,7 @@ void updateDefenderPosition(int _)
         {
             defender.state.accelerationCurrent[2] = -9.8;
         }
-        if (defender.state.velocityCurrent[0] < 0 && defender.state.accelerationCurrent[0] < 0)
+        if (defender.state.velocityCurrent[0] < 0 && defender.state.accelerationCurrent[0] < 0) //negative accelaration
         {
             defender.state.accelerationCurrent[0] = 0;
             defender.state.velocityCurrent[0] = 0;
@@ -744,7 +624,7 @@ void updateDefenderPosition(int _)
             defender.state.accelerationCurrent[0] = 0;
             defender.state.velocityCurrent[0] = 0;
         }
-        for (int i = 0; i < 3; ++i)
+        for (int i = 0; i < 3; ++i)                     //updating position and velocity
         {
             defender.state.positionCurrent[i] +=
                 defender.state.velocityCurrent[i] * t + 0.5 * defender.state.accelerationCurrent[i] * t * t;
@@ -752,9 +632,10 @@ void updateDefenderPosition(int _)
             defender.state.velocityCurrent[i] =
                 defender.state.velocityCurrent[i] + defender.state.accelerationCurrent[i] * t;
         }
-        // cout<<defender.state.positionCurrent[0]<<" human "<<defender.state.positionCurrent[2]<<" "<<defender.state.accelerationCurrent[2]<<" "<<defender.state.velocityCurrent[2]<<" "<<defender.state.velocityCurrent[0]<<endl;
     }
-    if (currentLevel == EASY)
+
+
+    if (currentLevel == EASY)       //updting defender in easy level
     {
 
         defender.state.accelerationCurrent[0] = 0;
@@ -774,9 +655,29 @@ void updateDefenderPosition(int _)
             defender.state.velocityCurrent[i] =
                 defender.state.velocityCurrent[i] + defender.state.accelerationCurrent[i] * t;
         }
-        //  cout<<defender.state.positionCurrent[0]<<" easy "<<defender.state.positionCurrent[2]<<" "<<defender.state.accelerationCurrent[2]<<" "<<defender.state.velocityCurrent[2]<<" "<<defender.state.velocityCurrent[0]<<endl;
     }
     if (currentLevel == MEDIUM)
+    {                                                   //updting defender in easy level
+
+        defender.state.accelerationCurrent[0] = 0;
+        defender.state.accelerationCurrent[1] = 0;
+        defender.state.accelerationCurrent[2] = -9.8;
+
+        if (defender.state.positionCurrent[2] < 0)
+        {
+            defender.state.positionCurrent[2] = 0;
+            defender.state.velocityCurrent[2] = -defender.state.velocityCurrent[2];
+        }
+        for (int i = 0; i < 3; ++i)
+        {
+            defender.state.positionCurrent[i] +=
+                defender.state.velocityCurrent[i] * t + 0.5 * defender.state.accelerationCurrent[i] * t * t;
+
+            defender.state.velocityCurrent[i] =
+                defender.state.velocityCurrent[i] + defender.state.accelerationCurrent[i] * t;
+        }
+    }
+    if (currentLevel == HARD)                   //updting defender in hard level
     {
 
         defender.state.accelerationCurrent[0] = 0;
@@ -796,33 +697,10 @@ void updateDefenderPosition(int _)
             defender.state.velocityCurrent[i] =
                 defender.state.velocityCurrent[i] + defender.state.accelerationCurrent[i] * t;
         }
-        //  cout<<defender.state.positionCurrent[0]<<" easy "<<defender.state.positionCurrent[2]<<" "<<defender.state.accelerationCurrent[2]<<" "<<defender.state.velocityCurrent[2]<<" "<<defender.state.velocityCurrent[0]<<endl;
-    }
-    if (currentLevel == HARD)
+   }
+    if (currentLevel == MOVE_POST)                          //updting defender in movepost level
     {
 
-        defender.state.accelerationCurrent[0] = 0;
-        defender.state.accelerationCurrent[1] = 0;
-        defender.state.accelerationCurrent[2] = -9.8;
-
-        if (defender.state.positionCurrent[2] < 0)
-        {
-            defender.state.positionCurrent[2] = 0;
-            defender.state.velocityCurrent[2] = -defender.state.velocityCurrent[2];
-        }
-        for (int i = 0; i < 3; ++i)
-        {
-            defender.state.positionCurrent[i] +=
-                defender.state.velocityCurrent[i] * t + 0.5 * defender.state.accelerationCurrent[i] * t * t;
-
-            defender.state.velocityCurrent[i] =
-                defender.state.velocityCurrent[i] + defender.state.accelerationCurrent[i] * t;
-        }
-        //  cout<<defender.state.positionCurrent[0]<<" easy "<<defender.state.positionCurrent[2]<<" "<<defender.state.accelerationCurrent[2]<<" "<<defender.state.velocityCurrent[2]<<" "<<defender.state.velocityCurrent[0]<<endl;
-    }
-    if (currentLevel == MOVE_POST)
-    {
-        // cout << "was in MOVE_POST\n";
         for (int i = 0; i < 3; ++i)
         {
 
@@ -842,24 +720,16 @@ void updateDefenderPosition(int _)
 
         if (defender.state.positionCurrent[0] >= 15 || defender.state.positionCurrent[0] <= -15)
         {
-            // cout << "was here in the updDefPos\n";
             defender.state.velocityCurrent[0] *= -1;
             defender.state.accelerationCurrent[0] *= -1;
         }
     }
-    // }
-
-    // else
-    // {
-    //     done = 0;
-    // };
     glutTimerFunc(1000 * 1 / 60.0, updateDefenderPosition, 1 / 60.0);
 }
 
-int convertToTexture(const char *filename)
+int convertToTexture(const char *filename)   // for texture making
 {
-    // cout << "control in convertToTexture\n";
-    // cout<<filename<<endl;
+    
     ifstream textFile(filename);
     string destination(filename);
     destination += ".tx";
@@ -889,7 +759,7 @@ int convertToTexture(const char *filename)
     dest.close();
 }
 
-GLuint loadTextureFile(const char *filename)
+GLuint loadTextureFile(const char *filename)        //loading texture
 {
 
     GLuint texture;
@@ -909,8 +779,7 @@ GLuint loadTextureFile(const char *filename)
     glGenTextures(1, &texture);
     glBindTexture(GL_TEXTURE_2D, texture);
 
-    //    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    //    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -949,7 +818,6 @@ void drawChalkLines()
 
     glColor3f(0.9, 0.9, 0.9);
     glTranslatef(0, 0, 0.0001 - BALL_RADIUS);
-    //    glLineWidth(POLE_RADIUS / 1.5);
     GLUquadric *quad = gluNewQuadric();
     gluDisk(quad, 0, chalkwidth / 1.5, 25, 6);
     gluDeleteQuadric(quad);
@@ -992,8 +860,6 @@ void start2DTexture(GLuint texture, bool lightingDisabled)
     glBindTexture(GL_TEXTURE_2D, texture);
     glTexEnvf(GL_TEXTURE_2D, GL_TEXTURE_ENV_MODE, GL_MODULATE);
     glEnable(GL_BLEND);
-    //    glEnable(GL_TEXTURE_GEN_S); //enable texture coordinate generation
-    //    glEnable(GL_TEXTURE_GEN_T);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glColor4f(1.0, 1.0, 1.0, 1.0); // Replace this alpha for transparency
 }
@@ -1035,14 +901,8 @@ float writeText(string text, int texture, alignment align)
     glGetTexLevelParameteriv(GL_TEXTURE_2D, miplevel, GL_TEXTURE_WIDTH, &w);
     glGetTexLevelParameteriv(GL_TEXTURE_2D, miplevel, GL_TEXTURE_HEIGHT, &h);
     float translatex = (w / 128.0) / h, translatey = 0, translatez = 0;
-    //    glPushMatrix();
-    //    glPushAttrib(GL_CURRENT_BIT);
-    //
-    //
-    //    glColor4fv(color);
     if (align == CENTER)
     {
-        //        float transx = text.size()*translatex/2.0;
         glTranslated(0 - ((text.size()) * translatex / 2.0), 0, 0);
     }
     else if (align == RIGHT)
@@ -1089,88 +949,11 @@ void rotateMsg(int _)
     }
 }
 
-// void showMsg() {
-//     glPushMatrix();
 
-//     float col[] = {132 / 255.0, 121 / 255.0, 150 / 255.0, 0.7};
-// //    float col[] = {1,0,0,1};
-
-//     float distance = sphereCamera.distance - 4;
-
-//     float colin[] = {1.0, 1.0, 1.0, 0.7};
-//     glTranslatef(distance * (cos(DEG2GRAD(sphereCamera.zAngle)) * cos(DEG2GRAD(sphereCamera.xAngle))),
-//                  distance * (cos(DEG2GRAD(sphereCamera.zAngle)) * sin(DEG2GRAD(sphereCamera.xAngle))),
-//                  distance * sin(DEG2GRAD(sphereCamera.zAngle)));
-//     glTranslatef(toLookAt.x, toLookAt.y, toLookAt.z);
-//     glRotatef(90 + sphereCamera.xAngle + textRotX, 0, 0, 1);
-//     glRotatef(-sphereCamera.zAngle, 1, 0, 0);
-//     glScalef(0.75, 0.75, 0.75);
-
-//     bool toWrite = true;
-
-//     string msg = "MISS!";
-
-//     currentTextColor = {1.0, 0.3, 0.3, 1};
-//     if (determineSphere) {
-//         if (isItGoal(*determineSphere)) {
-//             msg = "GOAL!";
-//             currentTextColor = {0.3, 1.0, 0.3, 1};
-//         }
-//     }
-//     if (!determineSphere) {
-//         msg = "";
-//         toWrite = false;
-//     }
-//     if (toWrite) {
-//         GLUquadric *quad = gluNewQuadric();
-//         glPushMatrix();
-//         glColor4fv(col);
-//         glScalef(2, 0.5, 1);
-//         glRotatef(90, 1, 0, 0);
-//         // gluSphere(sphere, radius, slices, stacks);
-//         gluCylinder(quad, 1, 1, 1, 40, 40);
-//         // gluDisk(quad, 0.9, 1, 40, 40);
-//         glColor4fv(colin);
-//         // gluDisk(quad, 0, 0.9, 40, 40);
-
-//         glPopMatrix();
-
-//         glPushMatrix();
-
-//         glPushMatrix();
-//         glColor4fv(col);
-//         glScalef(2, 0.5, 1);
-//         glTranslatef(0, -1, 0);
-//         glRotatef(90, 1, 0, 0);
-//         gluDisk(quad, 0.9, 1, 40, 40);
-//         glColor4fv(colin);
-//         gluDisk(quad, 0, 0.9, 40, 40);
-//         glPopMatrix();
-//         gluDeleteQuadric(quad);
-//         glPopMatrix();
-
-//         glPushMatrix();
-//         glTranslatef(0, .001, -0.5);
-//         glRotatef(180, 0, 0, 1);
-//         writeText(msg, font, CENTER);
-
-//         glPopMatrix();
-
-//         glPushMatrix();
-//         glTranslatef(0, -0.501, -0.5);
-//         writeText(msg, font, CENTER);
-//         glPopMatrix();
-
-//     }
-//     glPopMatrix();
-// }
 void fun(string msg)
 {
 
-    // glPushMatrix();
     float col[] = {132 / 255.0, 121 / 255.0, 150 / 255.0, 0.7};
-    //    float col[] = {1,0,0,1};
-
     float distance = sphereCamera.distance - 4;
 
     float colin[] = {1.0, 1.0, 1.0, 0.7};
@@ -1221,25 +1004,10 @@ void fun(string msg)
     writeText(msg, font, CENTER);
     glPopMatrix();
 }
-void resultMsg()
+void resultMsg()            //printing results
 {
     if (currentLevel != MOVE_POST)
     {
-
-        //      glPushMatrix();
-        //     float col[] = {132 / 255.0, 121 / 255.0, 150 / 255.0, 0.7};
-        // //    float col[] = {1,0,0,1};
-
-        //     float distance = sphereCamera.distance - 4;
-
-        //     float colin[] = {1.0, 1.0, 1.0, 0.7};
-        //     glTranslatef(distance * (cos(DEG2GRAD(sphereCamera.zAngle)) * cos(DEG2GRAD(sphereCamera.xAngle))),
-        //                  distance * (cos(DEG2GRAD(sphereCamera.zAngle)) * sin(DEG2GRAD(sphereCamera.xAngle))),
-        //                  distance * sin(DEG2GRAD(sphereCamera.zAngle)));
-        //     glTranslatef(toLookAt.x, toLookAt.y, toLookAt.z);
-        //     glRotatef(90 + sphereCamera.xAngle + textRotX, 0, 0, 1);
-        //     glRotatef(-sphereCamera.zAngle, 1, 0, 0);
-        //     glScalef(0.75, 0.75, 0.75);
 
         bool toWrite = true;
 
@@ -1264,12 +1032,11 @@ void resultMsg()
 
         if (toWrite)
         {
-            // cout<<msg<<" 999"<<endl;
 
             glPopMatrix();
             if (Tries % 5 == 0)
             {
-                cout << "TT" << Tries << " " << Goals << " " << prevGoals << endl;
+             
                 if (Goals - prevGoals > 5 - Goals + prevGoals)
                 {
                     msg = "A-WINS!";
@@ -1279,49 +1046,11 @@ void resultMsg()
                     msg = "D-WINS";
                 }
 
-                // fun(msg);'
-                cout << msg << endl;
+              
+             
             }
             fun(msg);
-            // GLUquadric *quad = gluNewQuadric();
-            // glPushMatrix();
-            // glColor4fv(col);
-            // glScalef(2, 0.5, 1);
-            // glRotatef(90, 1, 0, 0);
-            // // gluSphere(sphere, radius, slices, stacks);
-            // gluCylinder(quad, 1, 1, 1, 40, 40);
-            // // gluDisk(quad, 0.9, 1, 40, 40);
-            // glColor4fv(colin);
-            // // gluDisk(quad, 0, 0.9, 40, 40);
-
-            // glPopMatrix();
-
-            // glPushMatrix();
-
-            // glPushMatrix();
-            // glColor4fv(col);
-            // glScalef(2, 0.5, 1);
-            // glTranslatef(0, -1, 0);
-            // glRotatef(90, 1, 0, 0);
-            // gluDisk(quad, 0.9, 1, 40, 40);
-            // glColor4fv(colin);
-            // gluDisk(quad, 0, 0.9, 40, 40);
-            // glPopMatrix();
-            // gluDeleteQuadric(quad);
-            // glPopMatrix();
-
-            // glPushMatrix();
-            // glTranslatef(0, .001, -0.5);
-            // glRotatef(180, 0, 0, 1);
-
-            // writeText(msg, font, CENTER);
-
-            // glPopMatrix();
-
-            // glPushMatrix();
-            // glTranslatef(0, -0.501, -0.5);
-            // writeText(msg, font, CENTER);
-            // glPopMatrix();
+            
         }
         glPopMatrix();
     }
@@ -1345,27 +1074,7 @@ void resultMsg()
 
         bool toWrite = true;
 
-        // string msg = "D-WINS";
-        // message = "D-WINS";
-        // currentTextColor = {1.0, 0.3, 0.3, 1};
-        // if (determineSphere)
-        // {
-        //     cout << "was in determine sphere\n";
-        //     bool gll_scored = isItGoal(*determineSphere);
-        //     if (gll_scored)
-        //     {
-
-        //         message = "A-WINS";
-        //         currentTextColor = {0.3, 1.0, 0.3, 1};
-        //     }
-        //     // if (crossed)
-        //     // {
-        //     //     message = "A-WINS";
-        //     //     currentTextColor = {0.3, 1.0, 0.3, 1};
-        //     //     cout << "was in msg and A-Won\n";
-        //     //     // crossed = false;
-        //     // }
-        // }
+        
         if (message == "MISS!")
         {
             currentTextColor = {1.0, 0.3, 0.3, 1};
@@ -1383,7 +1092,7 @@ void resultMsg()
         }
         if (Tries % 5 == 0)
         {
-            cout << "TT" << Tries << " " << Goals << " " << prevGoals << endl;
+    
             if (Goals - prevGoals > 5 - Goals + prevGoals)
             {
                 message = "A-WINS!";
@@ -1393,8 +1102,6 @@ void resultMsg()
                 message = "D-WINS";
             }
 
-            // fun(msg);'
-            // cout << msg << endl;
         }
         if (toWrite)
         {

@@ -1,13 +1,11 @@
-//
-// Created by kunal on 4/3/18.
-//
+// This contains code for drawing different objects
 
 #include <GL/glut.h>
 #include "shapes.h"
 #include <bits/stdc++.h>
 #include "functionalities.h"
 
-void FlatSurface::draw()
+void FlatSurface::draw()     // drawing flat surface like ground
 {
 
     start2DTexture(groundTexture);
@@ -46,22 +44,16 @@ void FlatSurface::draw()
 
 FlatSurface ground;
 
-void PoleSurface::draw()
+void PoleSurface::draw()        // draw pole rods
 {
     glPushAttrib(GL_CURRENT_BIT);
     GLUquadric *quadric = gluNewQuadric();
 
     if (Type == U_POLE)
     {
-        //        glColor3f(0.0, 0.0, 0.0);
-        //        glBegin(GL_LINES);
-        //        glVertex3d(height, 0, 0);
-        //        glVertex3d(-height, 0, 0);
-        //        glEnd();
         glTranslated(radius, 0.0, radius);
         glRotatef(180, 1, 0, 0);
         {
-
             glPushMatrix();
             glPushAttrib(GL_CURRENT_BIT);
             glColor4fv(color);
@@ -112,10 +104,6 @@ void PoleSurface::draw()
         glRotatef(90, 0, 1, 0);
         glTranslated(0, 0, 2 * radius);
         glRotatef(180, 1, 0, 0);
-        //        glColor3f(0.0, 0.0, 0.0);
-        //        glBegin(GL_LINES);
-        //        glVertex3d(0, 0, 0);
-        //        glVertex3d(-height, 0, 0);
         glEnd();
         {
 
@@ -151,73 +139,15 @@ PoleSurface::PoleSurface()
     color[3] = 1.0;
 }
 
-void FlatArrow::drawWithPoints()
-{
-    axes vector;
-    for (int i = 0; i < 3; ++i)
-    {
-        vector[i] = finish[i] - start[i];
-    }
-    double rot;
-    rot = GRAD2DEG(acos((vector.y * vector.y) /
-                        (sqrt(vector.y * vector.y) *
-                         sqrt(vector.x * vector.x + vector.y * vector.y))));
-    glPushAttrib(GL_CURRENT_BIT);
-    glPushMatrix();
-
-    glRotatef(-rot, 0, 0, 1);
-
-    rot = GRAD2DEG(acos((vector.x * vector.x + vector.y * vector.y) /
-                        (sqrt(vector.x * vector.x + vector.y * vector.y + vector.z * vector.z) *
-                         sqrt(vector.x * vector.x + vector.y * vector.y))));
-
-    glRotatef(-rot, -vector.y, vector.x, 0);
-
-    glTranslated(start.x, -10, start.z);
-    glColor4fv(color);
-    glBegin(GL_QUADS);
-    glVertex3f(-width / 2, start.y, 0);
-    glVertex3f(width / 2, start.y, 0);
-    glVertex3f(width / 2, finish.y - 2 * width / vector.y, 0);
-    glVertex3f(-width / 2, finish.y - 2 * width / vector.y, 0);
-    glEnd();
-
-    glBegin(GL_TRIANGLES);
-    glVertex3f(-width, finish.y - 2 * width / vector.y, 0);
-    glVertex3f(width, finish.y - 2 * width / vector.y, 0);
-    glVertex3f(0, finish.y, 0);
-    glEnd();
-
-    // glTranslated(start.x, -10, start.z);
-    // glColor4f(0.0, 0.5, 0.0, 1.0);
-    // glBegin(GL_QUADS);
-    // glVertex3f(-width / 2, start.y, -BALL_RADIUS + 0.001f);
-    // glVertex3f(width / 2, start.y, -BALL_RADIUS + 0.001f);
-    // glVertex3f(width / 2, length - 2 * width / vector.y - length * sin(DEG2GRAD(zAngle)), -BALL_RADIUS + 0.001f);
-    // glVertex3f(-width / 2, length - 2 * width / vector.y - length * sin(DEG2GRAD(zAngle)), -BALL_RADIUS + 0.001f);
-    // glEnd();
-
-    // glBegin(GL_TRIANGLES);
-    // glVertex3f(-width, length - 2 * width / vector.y - length * sin(DEG2GRAD(zAngle)), -BALL_RADIUS + 0.001f);
-    // glVertex3f(width, length - 2 * width / vector.y - length * sin(DEG2GRAD(zAngle)), -BALL_RADIUS + 0.001f);
-    // glVertex3f(0, length - length * sin(DEG2GRAD(zAngle)), -BALL_RADIUS + 0.001f);
-    // glEnd();
-
-    glPopMatrix();
-    glPopAttrib();
-}
-
-void FlatArrow::drawWithAngles()
+void FlatArrow::drawWithAngles()  // drawing arrow of ball
 {
 
     axes vector;
     for (int i = 0; i < 3; ++i)
     {
         vector[i] = finish[i] - start[i];
-        // cout << "vector: " << i << ": " << vector[i] << "\n";
     }
 
-    // double rot;
     double rot_y = yAngle;
     glPushAttrib(GL_CURRENT_BIT);
     glPushMatrix();
@@ -228,8 +158,6 @@ void FlatArrow::drawWithAngles()
     glPushMatrix();
 
     double rot_z = zAngle;
-    // vector.y -= 10;
-    // cout << "val of vector.y " << vector.y << endl;
     glRotatef(rot_z, 1, 0, 0);
 
     glColor4fv(color);
@@ -272,15 +200,7 @@ void FlatArrow::drawWithAngles()
     glPopAttrib();
 }
 
-// void Defender::acceleration()
-// {
-// if (this->state.positionCurrent.x >= POLE_LENGTH / 2.0 - this->width / 2 - POLE_RADIUS ||
-//     this->state.positionCurrent.x <= -POLE_LENGTH / 2.0 + this->width / 2 + POLE_RADIUS)
-// {
-//     this->state.velocityCurrent.x *= -1;
-// }
-// }
-void Defender::acceleration()
+void Defender::acceleration()       //collision of defender with poles
 {
     if (currentLevel == MOVE_POST)
     {
@@ -310,17 +230,11 @@ void Defender::acceleration()
     }
 }
 
-void Defender::draw()
+void Defender::draw()           // drawing defender
 {
     start2DTexture(defenderTexture);
-    //    glPushMatrix();
-    //    glPushAttrib(GL_CURRENT_BIT);
-    //
-    //
-    //    glColor4fv(color);
 
     glTranslatef(defender.state.positionCurrent.x, GOAL_POST_Y, (this->height) / 2 - BALL_RADIUS + defender.state.positionCurrent.z);
-    //    glRotatef(armRot, 0,1,0);
 
     glBegin(GL_QUADS);
     glTexCoord2f(0.0, 1);
@@ -333,9 +247,7 @@ void Defender::draw()
     glVertex3f(-this->width / 2, 0, this->height / 2);
     glEnd();
 
-    //    glScalef((this->width)/DEFENDER_THICKNESS, 1.0, (this->height)/DEFENDER_THICKNESS);
-    //
-    //    glutSolidCube(DEFENDER_THICKNESS);
+
 
     glEnd();
 
@@ -382,8 +294,6 @@ void Defender::draw()
 
     end2DTexture();
 
-    //    glPopAttrib();
-    //    glPopMatrix();
 }
 
 FlatArrow aimArrow;
