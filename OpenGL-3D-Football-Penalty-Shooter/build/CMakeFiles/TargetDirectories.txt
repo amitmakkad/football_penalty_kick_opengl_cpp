@@ -1,4 +1,0 @@
-/home/amit18/cs352/project/OpenGL-3D-Football-Penalty-Shooter/OpenGL-3D-Football-Penalty-Shooter/build/CMakeFiles/rebuild_cache.dir
-/home/amit18/cs352/project/OpenGL-3D-Football-Penalty-Shooter/OpenGL-3D-Football-Penalty-Shooter/build/CMakeFiles/edit_cache.dir
-/home/amit18/cs352/project/OpenGL-3D-Football-Penalty-Shooter/OpenGL-3D-Football-Penalty-Shooter/build/CMakeFiles/run.dir
-/home/amit18/cs352/project/OpenGL-3D-Football-Penalty-Shooter/OpenGL-3D-Football-Penalty-Shooter/build/CMakeFiles/Football_Penalty_Shooter.dir

@@ -1,1 +1,0 @@
-/usr/bin/c++   -std=c++14 -lGL -lGLU -lglut   CMakeFiles/Football_Penalty_Shooter.dir/main.cpp.o CMakeFiles/Football_Penalty_Shooter.dir/functionalities.cpp.o CMakeFiles/Football_Penalty_Shooter.dir/shapes.cpp.o  -o Football_Penalty_Shooter 
