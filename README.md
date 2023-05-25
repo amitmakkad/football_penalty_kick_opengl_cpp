@@ -37,6 +37,7 @@ g++ main.cpp functionalities.cpp shapes.cpp constants.h -lGL -lGLU -lglut -lm -o
  - main.cpp - it calls the sequential execution of different components used in project
  - textureloader.py - to convert image into RGB format to render into project
  - fontloader.py - to convert image into RGB format to render into project
+ - Resources - contains different images, text and sound used
 
 <h2>Contributers:-</h2>
 
